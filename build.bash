@@ -60,4 +60,7 @@ ${FSC} --nologo --debug --target:library --out:LLVMFSharp.dll \
 #llvm-dis quotemodule.bc
 #gcc -o quotetest quotemodule.o test/quotetest.c
 #./quotetest
-
+#
+#echo "a basic clang test"
+#${FSC} --nologo -r LLVMFSharp.dll test/simpleclangtest.fs
+#mono simpleclangtest.exe

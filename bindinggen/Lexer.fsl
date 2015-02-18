@@ -16,6 +16,7 @@ let badToken (lb : LexBuffer<_>) =
 
 // These are some regular expression definitions
 let digit = ['0'-'9']
+let hexdigit = ['0'-'9'] | ['a'-'f'] | ['A'-'F']
 let alpha = ['a'-'z'] | ['A'-'Z']
 let varHead = alpha | '_'
 let varTail = varHead | digit
@@ -41,7 +42,11 @@ rule tokenize = parse
 | "struct"          { STRUCT }
 | "static"          { STATIC }
 | "inline"          { INLINE }
+| "CINDEX_LINKAGE"  { CINDEX_LINKAGE }
+| "CINDEX_DEPRECATED" { CINDEX_DEPRECATED }
 
+| '|'               { BITOR }
+| '-'               { MINUS }
 | ';'               { SEMICOL }
 | ','               { COMMA }
 | '*'               { ASTER }
@@ -67,11 +72,13 @@ rule tokenize = parse
 | "uint64_t"        { UINT64 }
 | "size_t"          { SIZE_T }
 | "uintptr_t"       { UINTPTR_T }
+| "time_t"          { TIME_T }
 
 | varHead varTail*  { NAME (lexeme lexbuf) }
 
 // Numeric constants
-| ['-']?digit+              { INTCONST (Int32.Parse(lexeme lexbuf)) }
+| ['-']?digit+      { INTCONST (Int32.Parse(lexeme lexbuf)) }
+| "0x"hexdigit+     { INTCONST (Int32.Parse((lexeme lexbuf).Substring(2), System.Globalization.NumberStyles.HexNumber)) }
 //| ['-']?digit+('.'digit+)?  { FLOAT (Double.Parse(lexeme lexbuf)) }
 
 // EOF

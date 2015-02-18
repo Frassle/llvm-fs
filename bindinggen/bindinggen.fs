@@ -7,10 +7,15 @@ open FSExternHelper.Lexer
 open FSExternHelper.Parser
 
 let llvmCPrefix = "LLVM"
+let clangCPrefix = "clang_"
 
 let toFSharpFunName (cFunName : string) =
     if cFunName.StartsWith llvmCPrefix then
         let baseName = cFunName.Substring llvmCPrefix.Length
+        let fstChar = (baseName.Substring (0, 1)).ToLower ()
+        fstChar + baseName.Substring 1
+    elif cFunName.StartsWith clangCPrefix then
+        let baseName = cFunName.Substring clangCPrefix.Length
         let fstChar = (baseName.Substring (0, 1)).ToLower ()
         fstChar + baseName.Substring 1
     else
@@ -20,7 +25,15 @@ let toFSharpDataName (cDataName : string) =
     if cDataName.StartsWith llvmCPrefix then
         cDataName.Substring llvmCPrefix.Length
     else
-        failwith ("unexpected data name: " + cDataName)
+        let fstChar = (cDataName.Substring (0, 1)).ToUpper ()
+        fstChar + cDataName.Substring 1
+
+let toFSharpVariableName (cVariableName : string) =
+    let reservedWords = set ["string"; "begin"; "end"; "module"; "base"; "const"]
+    if reservedWords.Contains(cVariableName) then
+        "_" + cVariableName
+    else
+        cVariableName
 
 // indented fprintf
 let inline ifprintf depth out fmt =
@@ -51,14 +64,26 @@ let getFuncTypeDefs (defs : CDef list) =
     go Set.empty defs
 
 let getAliasDefs (defs : CDef list) =
-    let rec go (structs : Set<string>)= function
-    | [] -> structs
+    let rec go (aliases : Set<string>)= function
+    | [] -> aliases
     | defHead :: defs ->
         match defHead with
         | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
-            go (structs.Add name) defs
-        | CTypeAlias ({CFullType.baseType = StructType _}, name) ->
-            failwith "only know how to deal with single-pointer structs"
+            go (aliases.Add name) defs
+        | CTypeAlias ({CFullType.baseType = VoidType; CFullType.pointerDepth = 1}, name) ->
+            go (aliases.Add name) defs
+        | _ ->
+            go aliases defs
+
+    go Set.empty defs
+
+let getStructDefs (defs : CDef list) =
+    let rec go (structs : Set<string>) = function
+    | [] -> structs
+    | defHead :: defs ->
+        match defHead with
+        | CStructDef (structName, _) ->
+            go (structs.Add structName) defs
         | _ ->
             go structs defs
 
@@ -77,6 +102,7 @@ let getEnumDefs (defs : CDef list) =
     go Set.empty defs
 
 let toFSharpSource
+        (modulePrefix : string)
         (moduleName : string)
         (out : System.IO.TextWriter)
         (deps : (string * CDef list) list)
@@ -101,9 +127,10 @@ let toFSharpSource
     
     let funcTypes = getFuncTypeDefs allDefs
     let aliasTypes = getAliasDefs allDefs
+    let structTypes = getStructDefs allDefs
     let enums = getEnumDefs allDefs
 
-    let typeToStr (isNative : bool) (isParam : bool) (cType : CFullType) =
+    let rec typeToStr (isNative : bool) (isParam : bool) (cType : CFullType) =
         let rec pointerAdjust ptrDepth typeStr =
             match ptrDepth with
             | 0 -> typeStr
@@ -130,8 +157,12 @@ let toFSharpSource
                     sprintf "void* (* %s *)" (cType.ToString ()) // TODO
                 else
                     sprintf "nativeint (* %s *)" (cType.ToString ())
+            elif structTypes.Contains typeName then
+                sprintf "%s" (toFSharpDataName typeName)
             else
                 failwith (sprintf "don't know how to deal with: %s" typeName)
+        | FunctionType (name, _, _) ->
+            sprintf "%s (* %s *)" (toFSharpDataName name) (cType.ToString())
         | StructType typeName ->
             if cType.pointerDepth = 1 then
                 if isNative then
@@ -165,6 +196,7 @@ let toFSharpSource
         | LongLongType -> defPtrAdj "int64"
         | UnsignedByteType -> defPtrAdj "uint8"
         | SizeTType -> defPtrAdj "nativeint (* size_t *)"
+        | TimeTType -> defPtrAdj "uint64 (* time_t *)"
         | UIntPtrTType -> defPtrAdj "unativeint (* uintptr_t *)"
         | DoubleType -> defPtrAdj "double"
 
@@ -179,9 +211,22 @@ let toFSharpSource
                 if blacklistedFuncs.Contains fName then
                     ifprintfn 2 out "// %s is blacklisted by the binding generator" fName
                 else
+                    for (arg, _) in fArgs do
+                        match arg.baseType with
+                        | FunctionType (name, retTy, args) ->
+                            // An unnamed function type is being passed in, generate a type for it
+                            let dTy = String.concat "" [
+                                        (sprintf "type %s = delegate of " (toFSharpDataName name))
+                                        (String.concat " * " (args |> Seq.map (fun (arg, _) -> typeToStr false true arg)))
+                                        (sprintf " -> %s" (typeToStr false false retTy))]
+
+                            ifprintfn 2 out "%s" dTy
+                            out.WriteLine()
+                        | _ -> ()
+
                     // the native function def
                     ifprintfn 2 out "[<DllImport("
-                    ifprintfn 3 out "llvmAssemblyName,"
+                    ifprintfn 3 out "%sAssemblyName," (modulePrefix.ToLower())
                     ifprintfn 3 out "EntryPoint=\"%s\"," fName
                     ifprintfn 3 out "CallingConvention=CallingConvention.Cdecl,"
                     ifprintfn 3 out "CharSet=CharSet.Ansi)>]"
@@ -193,9 +238,9 @@ let toFSharpSource
                         out.WriteLine ()
                         for i = 0 to fArgs.Length - 2 do
                             let cType, name = fArgs.[i]
-                            ifprintfn 3 out "%s %s," (typeToStr true true cType) name
+                            ifprintfn 3 out "%s %s," (typeToStr true true cType) (toFSharpVariableName name)
                         let cType, name = fArgs.[fArgs.Length - 1]
-                        ifprintfn 3 out "%s %s)" (typeToStr true true cType) name
+                        ifprintfn 3 out "%s %s)" (typeToStr true true cType) (toFSharpVariableName name)
                     else
                         out.WriteLine ')'
 
@@ -205,7 +250,8 @@ let toFSharpSource
                             match t.baseType with
                             | GeneralType _ | StructType _ | IntType
                             | UnsignedIntType | UnsignedLongLongType | LongLongType
-                            | UnsignedByteType | DoubleType | SizeTType | UIntPtrTType ->
+                            | UnsignedByteType | DoubleType | SizeTType | UIntPtrTType 
+                            | TimeTType | FunctionType _ ->
                                 t.pointerDepth = 0
                             | CharType ->
                                 t.pointerDepth <= 1
@@ -236,6 +282,8 @@ let toFSharpSource
                                         sprintf "%s" name
                                     elif aliasTypes.Contains typeName then
                                         sprintf "(%s : %s).Ptr" name (toFSharpDataName typeName)
+                                    elif structTypes.Contains typeName then
+                                        sprintf "(%s : %s)" name (toFSharpDataName typeName)
                                     else
                                         failwith (sprintf "don't know how to deal with: %s" typeName)
                                 | _ -> name
@@ -273,6 +321,9 @@ let toFSharpSource
                                     ifprintf 3 out "new %s (" (toFSharpDataName typeName)
                                     nativeFunCall ()
                                     fprintf out ")"
+                                elif structTypes.Contains typeName then
+                                    ifprintf 3 out ""
+                                    nativeFunCall ()
                                 else
                                     failwith (sprintf "don't know how to deal with: %s" typeName)
                             | _ ->
@@ -302,11 +353,25 @@ let toFSharpSource
                 go defTail
 
             | CEnumDef (enumName, enumVals) ->
+                let rec evalEnum enums value =
+                    match value with
+                    | CExprInt i -> i
+                    | CExprName n ->
+                        Seq.pick (fun (name, value) -> 
+                            if name = n then
+                                match value with
+                                | Some value -> Some (evalEnum enums value)
+                                | None -> failwith "Tried to eval an enum with no value"
+                            else
+                                None) enums
+                    | CExprBitOr (a, b) -> (evalEnum enums a) ||| (evalEnum enums b)
+                    | CExprMinus (a, b) -> (evalEnum enums a) - (evalEnum enums b)
+
                 ifprintfn 2 out "type %s =" (toFSharpDataName enumName)
                 let mutable nextEnumVal = 0
                 for eValName, maybeEnumVal in enumVals do
                     match maybeEnumVal with
-                    | Some enumVal -> nextEnumVal <- enumVal
+                    | Some enumVal -> nextEnumVal <- (evalEnum enumVals enumVal)
                     | None -> ()
                     
                     ifprintfn 3 out "| %s = %i" (toFSharpDataName eValName) nextEnumVal
@@ -316,16 +381,45 @@ let toFSharpSource
                 go defTail
 
             | CStructDef (structName, structFields) ->
+                for (_, field) in structFields do
+                    match field.baseType with
+                    | FunctionType (name, retTy, args) ->
+                        // An unnamed function type is being passed in, generate a type for it
+                        let dTy = String.concat "" [
+                                    (sprintf "type %s = delegate of " (toFSharpDataName name))
+                                    (String.concat " * " (args |> Seq.map (fun (arg, _) -> typeToStr false true arg)))
+                                    (sprintf " -> %s" (typeToStr false false retTy))]
+
+                        ifprintfn 2 out "%s" dTy
+                        out.WriteLine()
+                    | _ -> ()
+
                 ifprintfn 2 out "[<Struct>]"
                 ifprintfn 2 out "type %s =" (toFSharpDataName structName)
                 for (fieldName, fieldType) in structFields do
-                    ifprintfn 3 out "val mutable %s : %s" (fieldName) (typeToStr false false fieldType)
+                    match fieldType.arraySize with
+                    | None -> ifprintfn 3 out "val mutable %s : %s" (toFSharpVariableName fieldName) (typeToStr false false fieldType)
+                    | Some size ->
+                        // Fixed array, need to hack in multiple fields untill F# supports this
+                        for i = 0 to size - 1 do
+                            let ty = { fieldType with arraySize = None }
+                            let name = sprintf "%s%i" (toFSharpVariableName fieldName) i
+                            ifprintfn 3 out "val mutable %s : %s" name (typeToStr false false ty)
 
                 out.WriteLine ()
 
                 go defTail
 
             | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
+                let dataName = toFSharpDataName name
+                ifprintfn 2 out "type %s (thePtr : nativeint) =" dataName
+                ifprintfn 3 out "member x.Ptr = (x :> ILLVMRef).Ptr"
+                ifprintfn 3 out "interface ILLVMRef with member x.Ptr = thePtr"
+                out.WriteLine ()
+                
+                go defTail
+
+            | CTypeAlias ({CFullType.baseType = VoidType; CFullType.pointerDepth = 1}, name) ->
                 let dataName = toFSharpDataName name
                 ifprintfn 2 out "type %s (thePtr : nativeint) =" dataName
                 ifprintfn 3 out "member x.Ptr = (x :> ILLVMRef).Ptr"
@@ -355,39 +449,45 @@ let toFSharpSource
 
     (!friendlyFuncCount, !nativeFuncCount)
 
+let parse cPrefix modulePrefix modulesToProcess (outSrcFile : string) =
+    let parseMod (m : string) =
+        let hFile = Path.Combine (cPrefix, Path.Combine (m.Split '.') + ".h")
+        let reader = new StreamReader(hFile)
+        let lexbuf = LexBuffer<_>.FromTextReader reader
+        start tokenize lexbuf
+    let writer = new StreamWriter(outSrcFile, true (* append *))
+    let rec processModules friendlyCount nativeCount (mods : (string * string list) list) =
+        match mods with
+        | [] -> (friendlyCount, nativeCount)
+        | ((m : string), deps) :: mTail ->
+            let modName m = modulePrefix + ".Generated." + m
+            let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
+            let friendlyFuncCount, nativeFuncCount =
+                toFSharpSource modulePrefix (modName m) writer depDefs (parseMod m)
+            printfn
+                "inferred friendly types for %i/%i functions in %s"
+                friendlyFuncCount
+                nativeFuncCount
+                m
+            
+            processModules
+                (friendlyCount + friendlyFuncCount)
+                (nativeCount + nativeFuncCount)
+                mTail
+    
+    let friendlyFuncCount, nativeFuncCount =
+        processModules 0 0 modulesToProcess
+    writer.Close ()
+    printfn "inferred friendly types for %i/%i functions in total" friendlyFuncCount nativeFuncCount
 
 [<EntryPoint>]
 let main (args : string array) =
     match args with
     | [|llvmHome; outSrcFile|] ->
-        let cPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
-        let modulePrefix = "LLVM.Generated."
-        let parseMod (m : string) =
-            let hFile = Path.Combine (cPrefix, Path.Combine (m.Split '.') + ".h")
-            let reader = new StreamReader(hFile)
-            let lexbuf = LexBuffer<_>.FromTextReader reader
-            start tokenize lexbuf
-        let writer = new StreamWriter(outSrcFile)
-        let rec processModules friendlyCount nativeCount (mods : (string * string list) list) =
-            match mods with
-            | [] -> (friendlyCount, nativeCount)
-            | ((m : string), deps) :: mTail ->
-                let modName m = "LLVM.Generated." + m
-                let depDefs = List.map (fun m -> (modName m, parseMod m)) deps
-                let friendlyFuncCount, nativeFuncCount =
-                    toFSharpSource (modName m) writer depDefs (parseMod m)
-                printfn
-                    "inferred friendly types for %i/%i functions in %s"
-                    friendlyFuncCount
-                    nativeFuncCount
-                    m
-                
-                processModules
-                    (friendlyCount + friendlyFuncCount)
-                    (nativeCount + nativeFuncCount)
-                    mTail
-        
-        let modulesToProcess = [
+        System.IO.File.Delete(outSrcFile)
+
+        let llvmPrefix = Path.Combine [|llvmHome; "include"; "llvm-c"|]
+        let llvmModules = [
             ("Support",             [])
             ("Object",              ["Support"])
             ("Core",                ["Support"])
@@ -400,14 +500,20 @@ let main (args : string array) =
             ("Analysis",            ["Core"])
             ("Transforms.Scalar",   ["Core"])
             ("Transforms.IPO",      ["Core"])]
-        let friendlyFuncCount, nativeFuncCount =
-            processModules 0 0 modulesToProcess
-        writer.Close ()
-        printfn "inferred friendly types for %i/%i functions in total" friendlyFuncCount nativeFuncCount
-    
+        parse llvmPrefix "LLVM" llvmModules outSrcFile
+
+        let clangPrefix = Path.Combine [|llvmHome; "tools"; "clang"; "include"; "clang-c"|]
+        let clangModules = [
+            ("CXString",              [])
+            ("CXErrorCode",           [])
+            ("CXCompilationDatabase", ["CXString"])
+            ("BuildSystem",           ["CXString"; "CXErrorCode"])
+            ("Index",                 ["CXString"; "CXErrorCode"; "BuildSystem"])
+           //("Documentation",         ["Index"])
+           ]
+        parse clangPrefix "Clang" clangModules outSrcFile
     | _ ->
         failwith "usage: bindinggen llvmHome outSrcFile"
     
     // Exit code
     0
-

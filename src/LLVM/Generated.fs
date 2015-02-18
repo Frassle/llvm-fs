@@ -1665,6 +1665,26 @@ namespace LLVM.Generated
 
         [<DllImport(
             llvmAssemblyName,
+            EntryPoint="LLVMIsAMDNode",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) isAMDNodeNative(
+            void* (* LLVMValueRef *) Val)
+        let isAMDNode _Val =
+            new ValueRef (isAMDNodeNative ((_Val : ValueRef).Ptr))
+
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMIsAMDString",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMValueRef *) isAMDStringNative(
+            void* (* LLVMValueRef *) Val)
+        let isAMDString _Val =
+            new ValueRef (isAMDStringNative ((_Val : ValueRef).Ptr))
+
+        [<DllImport(
+            llvmAssemblyName,
             EntryPoint="LLVMGetFirstUse",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
@@ -6666,7 +6686,27 @@ namespace LLVM.Generated
         let getPointerToGlobal _EE _Global =
             getPointerToGlobalNative ((_EE : ExecutionEngineRef).Ptr, (_Global : ValueRef).Ptr)
 
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMGetGlobalValueAddress",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint64 getGlobalValueAddressNative(
+            void* (* LLVMExecutionEngineRef *) EE,
+            string Name)
+        let getGlobalValueAddress _EE _Name =
+            getGlobalValueAddressNative ((_EE : ExecutionEngineRef).Ptr, _Name)
 
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMGetFunctionAddress",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint64 getFunctionAddressNative(
+            void* (* LLVMExecutionEngineRef *) EE,
+            string Name)
+        let getFunctionAddress _EE _Name =
+            getFunctionAddressNative ((_EE : ExecutionEngineRef).Ptr, _Name)
 
         type MemoryManagerAllocateCodeSectionCallback = delegate of nativeint (* nativeptr<void> *) * unativeint (* uintptr_t *) * uint32 * uint32 * string -> nativeptr<uint8>
 
@@ -7285,4 +7325,3840 @@ namespace LLVM.Generated.Transforms
             void* (* LLVMPassManagerRef *) PM)
         let addStripSymbolsPass _PM =
             addStripSymbolsPassNative ((_PM : PassManagerRef).Ptr)
+
+// This file should not be edited. It is automatically generated from a C header file
+namespace Clang.Generated
+
+    open LLVM.FFIUtil
+    open System.Runtime.InteropServices
+
+    module CXString =
+
+        [<Struct>]
+        type CXString =
+            val mutable data : nativeint (* nativeptr<void> *)
+            val mutable private_flags : uint32
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCString",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* getCStringNative(
+            CXString _string)
+        let getCString _string =
+            Marshal.PtrToStringAuto (getCStringNative ((_string : CXString)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeString",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeStringNative(
+            CXString _string)
+        let disposeString _string =
+            disposeStringNative ((_string : CXString))
+
+// This file should not be edited. It is automatically generated from a C header file
+namespace Clang.Generated
+
+    open LLVM.FFIUtil
+    open System.Runtime.InteropServices
+
+    module CXErrorCode =
+
+        type CXErrorCode =
+            | CXError_Success = 0
+            | CXError_Failure = 1
+            | CXError_Crashed = 2
+            | CXError_InvalidArguments = 3
+            | CXError_ASTReadError = 4
+
+// This file should not be edited. It is automatically generated from a C header file
+namespace Clang.Generated
+
+    open LLVM.FFIUtil
+    open System.Runtime.InteropServices
+    open Clang.Generated.CXString
+
+    module CXCompilationDatabase =
+
+        type CXCompilationDatabase (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXCompileCommands (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXCompileCommand (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXCompilationDatabase_Error =
+            | CXCompilationDatabase_NoError = 0
+            | CXCompilationDatabase_CanNotLoadDatabase = 1
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompilationDatabase_fromDirectory",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXCompilationDatabase *) compilationDatabase_fromDirectoryNative(
+            string BuildDir,
+            int (* CXCompilationDatabase_Error* *)* ErrorCode)
+        // I don't know how to generate an "F# friendly" version of clang_CompilationDatabase_fromDirectory
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompilationDatabase_dispose",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void compilationDatabase_disposeNative(
+            void* (* CXCompilationDatabase *) arg0)
+        let compilationDatabase_dispose _arg0 =
+            compilationDatabase_disposeNative ((_arg0 : CXCompilationDatabase).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompilationDatabase_getCompileCommands",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXCompileCommands *) compilationDatabase_getCompileCommandsNative(
+            void* (* CXCompilationDatabase *) arg0,
+            string CompleteFileName)
+        let compilationDatabase_getCompileCommands _arg0 _CompleteFileName =
+            new CXCompileCommands (compilationDatabase_getCompileCommandsNative ((_arg0 : CXCompilationDatabase).Ptr, _CompleteFileName))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompilationDatabase_getAllCompileCommands",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXCompileCommands *) compilationDatabase_getAllCompileCommandsNative(
+            void* (* CXCompilationDatabase *) arg0)
+        let compilationDatabase_getAllCompileCommands _arg0 =
+            new CXCompileCommands (compilationDatabase_getAllCompileCommandsNative ((_arg0 : CXCompilationDatabase).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommands_dispose",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void compileCommands_disposeNative(
+            void* (* CXCompileCommands *) arg0)
+        let compileCommands_dispose _arg0 =
+            compileCommands_disposeNative ((_arg0 : CXCompileCommands).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommands_getSize",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 compileCommands_getSizeNative(
+            void* (* CXCompileCommands *) arg0)
+        let compileCommands_getSize _arg0 =
+            compileCommands_getSizeNative ((_arg0 : CXCompileCommands).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommands_getCommand",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXCompileCommand *) compileCommands_getCommandNative(
+            void* (* CXCompileCommands *) arg0,
+            uint32 I)
+        let compileCommands_getCommand _arg0 _I =
+            new CXCompileCommand (compileCommands_getCommandNative ((_arg0 : CXCompileCommands).Ptr, _I))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommand_getDirectory",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString compileCommand_getDirectoryNative(
+            void* (* CXCompileCommand *) arg0)
+        let compileCommand_getDirectory _arg0 =
+            compileCommand_getDirectoryNative ((_arg0 : CXCompileCommand).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommand_getNumArgs",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 compileCommand_getNumArgsNative(
+            void* (* CXCompileCommand *) arg0)
+        let compileCommand_getNumArgs _arg0 =
+            compileCommand_getNumArgsNative ((_arg0 : CXCompileCommand).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommand_getArg",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString compileCommand_getArgNative(
+            void* (* CXCompileCommand *) arg0,
+            uint32 I)
+        let compileCommand_getArg _arg0 _I =
+            compileCommand_getArgNative ((_arg0 : CXCompileCommand).Ptr, _I)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommand_getNumMappedSources",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 compileCommand_getNumMappedSourcesNative(
+            void* (* CXCompileCommand *) arg0)
+        let compileCommand_getNumMappedSources _arg0 =
+            compileCommand_getNumMappedSourcesNative ((_arg0 : CXCompileCommand).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommand_getMappedSourcePath",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString compileCommand_getMappedSourcePathNative(
+            void* (* CXCompileCommand *) arg0,
+            uint32 I)
+        let compileCommand_getMappedSourcePath _arg0 _I =
+            compileCommand_getMappedSourcePathNative ((_arg0 : CXCompileCommand).Ptr, _I)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CompileCommand_getMappedSourceContent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString compileCommand_getMappedSourceContentNative(
+            void* (* CXCompileCommand *) arg0,
+            uint32 I)
+        let compileCommand_getMappedSourceContent _arg0 _I =
+            compileCommand_getMappedSourceContentNative ((_arg0 : CXCompileCommand).Ptr, _I)
+
+// This file should not be edited. It is automatically generated from a C header file
+namespace Clang.Generated
+
+    open LLVM.FFIUtil
+    open System.Runtime.InteropServices
+    open Clang.Generated.CXString
+    open Clang.Generated.CXErrorCode
+
+    module BuildSystem =
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getBuildSessionTimestamp",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint64 getBuildSessionTimestampNative()
+        let getBuildSessionTimestamp () =
+            getBuildSessionTimestampNative ()
+
+        type CXVirtualFileOverlay (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_VirtualFileOverlay_create",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXVirtualFileOverlay *) virtualFileOverlay_createNative(
+            uint32 options)
+        let virtualFileOverlay_create _options =
+            new CXVirtualFileOverlay (virtualFileOverlay_createNative (_options))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_VirtualFileOverlay_addFileMapping",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) virtualFileOverlay_addFileMappingNative(
+            void* (* CXVirtualFileOverlay *) arg0,
+            string virtualPath,
+            string realPath)
+        let virtualFileOverlay_addFileMapping _arg0 _virtualPath _realPath =
+            enum<CXErrorCode> (virtualFileOverlay_addFileMappingNative ((_arg0 : CXVirtualFileOverlay).Ptr, _virtualPath, _realPath))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_VirtualFileOverlay_setCaseSensitivity",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) virtualFileOverlay_setCaseSensitivityNative(
+            void* (* CXVirtualFileOverlay *) arg0,
+            int caseSensitive)
+        let virtualFileOverlay_setCaseSensitivity _arg0 _caseSensitive =
+            enum<CXErrorCode> (virtualFileOverlay_setCaseSensitivityNative ((_arg0 : CXVirtualFileOverlay).Ptr, _caseSensitive))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_VirtualFileOverlay_writeToBuffer",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) virtualFileOverlay_writeToBufferNative(
+            void* (* CXVirtualFileOverlay *) arg0,
+            uint32 options,
+            void* out_buffer_ptr,
+            uint32* out_buffer_size)
+        // I don't know how to generate an "F# friendly" version of clang_VirtualFileOverlay_writeToBuffer
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_VirtualFileOverlay_dispose",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void virtualFileOverlay_disposeNative(
+            void* (* CXVirtualFileOverlay *) arg0)
+        let virtualFileOverlay_dispose _arg0 =
+            virtualFileOverlay_disposeNative ((_arg0 : CXVirtualFileOverlay).Ptr)
+
+        type CXModuleMapDescriptor (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_ModuleMapDescriptor_create",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXModuleMapDescriptor *) moduleMapDescriptor_createNative(
+            uint32 options)
+        let moduleMapDescriptor_create _options =
+            new CXModuleMapDescriptor (moduleMapDescriptor_createNative (_options))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_ModuleMapDescriptor_setFrameworkModuleName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) moduleMapDescriptor_setFrameworkModuleNameNative(
+            void* (* CXModuleMapDescriptor *) arg0,
+            string name)
+        let moduleMapDescriptor_setFrameworkModuleName _arg0 _name =
+            enum<CXErrorCode> (moduleMapDescriptor_setFrameworkModuleNameNative ((_arg0 : CXModuleMapDescriptor).Ptr, _name))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_ModuleMapDescriptor_setUmbrellaHeader",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) moduleMapDescriptor_setUmbrellaHeaderNative(
+            void* (* CXModuleMapDescriptor *) arg0,
+            string name)
+        let moduleMapDescriptor_setUmbrellaHeader _arg0 _name =
+            enum<CXErrorCode> (moduleMapDescriptor_setUmbrellaHeaderNative ((_arg0 : CXModuleMapDescriptor).Ptr, _name))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_ModuleMapDescriptor_writeToBuffer",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) moduleMapDescriptor_writeToBufferNative(
+            void* (* CXModuleMapDescriptor *) arg0,
+            uint32 options,
+            void* out_buffer_ptr,
+            uint32* out_buffer_size)
+        // I don't know how to generate an "F# friendly" version of clang_ModuleMapDescriptor_writeToBuffer
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_ModuleMapDescriptor_dispose",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void moduleMapDescriptor_disposeNative(
+            void* (* CXModuleMapDescriptor *) arg0)
+        let moduleMapDescriptor_dispose _arg0 =
+            moduleMapDescriptor_disposeNative ((_arg0 : CXModuleMapDescriptor).Ptr)
+
+// This file should not be edited. It is automatically generated from a C header file
+namespace Clang.Generated
+
+    open LLVM.FFIUtil
+    open System.Runtime.InteropServices
+    open Clang.Generated.CXString
+    open Clang.Generated.CXErrorCode
+    open Clang.Generated.BuildSystem
+
+    module Index =
+
+        type CXIndex (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXTranslationUnit (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXClientData (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<Struct>]
+        type CXUnsavedFile =
+            val mutable Filename : nativeint
+            val mutable Contents : nativeint
+            val mutable Length : uint64
+
+        type CXAvailabilityKind =
+            | CXAvailability_Available = 0
+            | CXAvailability_Deprecated = 1
+            | CXAvailability_NotAvailable = 2
+            | CXAvailability_NotAccessible = 3
+
+        [<Struct>]
+        type CXVersion =
+            val mutable Major : int
+            val mutable Minor : int
+            val mutable Subminor : int
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_createIndex",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXIndex *) createIndexNative(
+            int excludeDeclarationsFromPCH,
+            int displayDiagnostics)
+        let createIndex _excludeDeclarationsFromPCH _displayDiagnostics =
+            new CXIndex (createIndexNative (_excludeDeclarationsFromPCH, _displayDiagnostics))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeIndex",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeIndexNative(
+            void* (* CXIndex *) index)
+        let disposeIndex _index =
+            disposeIndexNative ((_index : CXIndex).Ptr)
+
+        type CXGlobalOptFlags =
+            | CXGlobalOpt_None = 0
+            | CXGlobalOpt_ThreadBackgroundPriorityForIndexing = 1
+            | CXGlobalOpt_ThreadBackgroundPriorityForEditing = 2
+            | CXGlobalOpt_ThreadBackgroundPriorityForAll = 3
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXIndex_setGlobalOptions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void cXIndex_setGlobalOptionsNative(
+            void* (* CXIndex *) arg0,
+            uint32 options)
+        let cXIndex_setGlobalOptions _arg0 _options =
+            cXIndex_setGlobalOptionsNative ((_arg0 : CXIndex).Ptr, _options)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXIndex_getGlobalOptions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cXIndex_getGlobalOptionsNative(
+            void* (* CXIndex *) arg0)
+        let cXIndex_getGlobalOptions _arg0 =
+            cXIndex_getGlobalOptionsNative ((_arg0 : CXIndex).Ptr)
+
+        type CXFile (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getFileName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getFileNameNative(
+            void* (* CXFile *) SFile)
+        let getFileName _SFile =
+            getFileNameNative ((_SFile : CXFile).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getFileTime",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint64 (* time_t *) getFileTimeNative(
+            void* (* CXFile *) SFile)
+        let getFileTime _SFile =
+            getFileTimeNative ((_SFile : CXFile).Ptr)
+
+        [<Struct>]
+        type CXFileUniqueID =
+            val mutable data0 : uint64
+            val mutable data1 : uint64
+            val mutable data2 : uint64
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getFileUniqueID",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int getFileUniqueIDNative(
+            void* (* CXFile *) file,
+            CXFileUniqueID outID)
+        // I don't know how to generate an "F# friendly" version of clang_getFileUniqueID
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isFileMultipleIncludeGuarded",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isFileMultipleIncludeGuardedNative(
+            void* (* CXTranslationUnit *) tu,
+            void* (* CXFile *) file)
+        let isFileMultipleIncludeGuarded _tu _file =
+            isFileMultipleIncludeGuardedNative ((_tu : CXTranslationUnit).Ptr, (_file : CXFile).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXFile *) getFileNative(
+            void* (* CXTranslationUnit *) tu,
+            string file_name)
+        let getFile _tu _file_name =
+            new CXFile (getFileNative ((_tu : CXTranslationUnit).Ptr, _file_name))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_File_isEqual",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int file_isEqualNative(
+            void* (* CXFile *) file1,
+            void* (* CXFile *) file2)
+        let file_isEqual _file1 _file2 =
+            file_isEqualNative ((_file1 : CXFile).Ptr, (_file2 : CXFile).Ptr)
+
+        [<Struct>]
+        type CXSourceLocation =
+            val mutable ptr_data0 : nativeint (* nativeptr<void> *)
+            val mutable ptr_data1 : nativeint (* nativeptr<void> *)
+            val mutable int_data : uint32
+
+        [<Struct>]
+        type CXSourceRange =
+            val mutable ptr_data0 : nativeint (* nativeptr<void> *)
+            val mutable ptr_data1 : nativeint (* nativeptr<void> *)
+            val mutable begin_int_data : uint32
+            val mutable end_int_data : uint32
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNullLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getNullLocationNative()
+        let getNullLocation () =
+            getNullLocationNative ()
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_equalLocations",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 equalLocationsNative(
+            CXSourceLocation loc1,
+            CXSourceLocation loc2)
+        let equalLocations _loc1 _loc2 =
+            equalLocationsNative ((_loc1 : CXSourceLocation), (_loc2 : CXSourceLocation))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getLocationNative(
+            void* (* CXTranslationUnit *) tu,
+            void* (* CXFile *) file,
+            uint32 line,
+            uint32 column)
+        let getLocation _tu _file _line _column =
+            getLocationNative ((_tu : CXTranslationUnit).Ptr, (_file : CXFile).Ptr, _line, _column)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getLocationForOffset",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getLocationForOffsetNative(
+            void* (* CXTranslationUnit *) tu,
+            void* (* CXFile *) file,
+            uint32 offset)
+        let getLocationForOffset _tu _file _offset =
+            getLocationForOffsetNative ((_tu : CXTranslationUnit).Ptr, (_file : CXFile).Ptr, _offset)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Location_isInSystemHeader",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int location_isInSystemHeaderNative(
+            CXSourceLocation location)
+        let location_isInSystemHeader _location =
+            location_isInSystemHeaderNative ((_location : CXSourceLocation))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Location_isFromMainFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int location_isFromMainFileNative(
+            CXSourceLocation location)
+        let location_isFromMainFile _location =
+            location_isFromMainFileNative ((_location : CXSourceLocation))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNullRange",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange getNullRangeNative()
+        let getNullRange () =
+            getNullRangeNative ()
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getRange",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange getRangeNative(
+            CXSourceLocation _begin,
+            CXSourceLocation _end)
+        let getRange _begin _end =
+            getRangeNative ((_begin : CXSourceLocation), (_end : CXSourceLocation))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_equalRanges",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 equalRangesNative(
+            CXSourceRange range1,
+            CXSourceRange range2)
+        let equalRanges _range1 _range2 =
+            equalRangesNative ((_range1 : CXSourceRange), (_range2 : CXSourceRange))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Range_isNull",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int range_isNullNative(
+            CXSourceRange range)
+        let range_isNull _range =
+            range_isNullNative ((_range : CXSourceRange))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getExpansionLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getExpansionLocationNative(
+            CXSourceLocation location,
+            void* (* CXFile* *) file,
+            uint32* line,
+            uint32* column,
+            uint32* offset)
+        // I don't know how to generate an "F# friendly" version of clang_getExpansionLocation
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getPresumedLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getPresumedLocationNative(
+            CXSourceLocation location,
+            CXString filename,
+            uint32* line,
+            uint32* column)
+        // I don't know how to generate an "F# friendly" version of clang_getPresumedLocation
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getInstantiationLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getInstantiationLocationNative(
+            CXSourceLocation location,
+            void* (* CXFile* *) file,
+            uint32* line,
+            uint32* column,
+            uint32* offset)
+        // I don't know how to generate an "F# friendly" version of clang_getInstantiationLocation
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getSpellingLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getSpellingLocationNative(
+            CXSourceLocation location,
+            void* (* CXFile* *) file,
+            uint32* line,
+            uint32* column,
+            uint32* offset)
+        // I don't know how to generate an "F# friendly" version of clang_getSpellingLocation
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getFileLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getFileLocationNative(
+            CXSourceLocation location,
+            void* (* CXFile* *) file,
+            uint32* line,
+            uint32* column,
+            uint32* offset)
+        // I don't know how to generate an "F# friendly" version of clang_getFileLocation
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getRangeStart",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getRangeStartNative(
+            CXSourceRange range)
+        let getRangeStart _range =
+            getRangeStartNative ((_range : CXSourceRange))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getRangeEnd",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getRangeEndNative(
+            CXSourceRange range)
+        let getRangeEnd _range =
+            getRangeEndNative ((_range : CXSourceRange))
+
+        [<Struct>]
+        type CXSourceRangeList =
+            val mutable count : uint32
+            val mutable ranges : CXSourceRange
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getSkippedRanges",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRangeList getSkippedRangesNative(
+            void* (* CXTranslationUnit *) tu,
+            void* (* CXFile *) file)
+        // I don't know how to generate an "F# friendly" version of clang_getSkippedRanges
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeSourceRangeList",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeSourceRangeListNative(
+            CXSourceRangeList ranges)
+        // I don't know how to generate an "F# friendly" version of clang_disposeSourceRangeList
+
+        type CXDiagnosticSeverity =
+            | CXDiagnostic_Ignored = 0
+            | CXDiagnostic_Note = 1
+            | CXDiagnostic_Warning = 2
+            | CXDiagnostic_Error = 3
+            | CXDiagnostic_Fatal = 4
+
+        type CXDiagnostic (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXDiagnosticSet (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNumDiagnosticsInSet",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getNumDiagnosticsInSetNative(
+            void* (* CXDiagnosticSet *) Diags)
+        let getNumDiagnosticsInSet _Diags =
+            getNumDiagnosticsInSetNative ((_Diags : CXDiagnosticSet).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticInSet",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXDiagnostic *) getDiagnosticInSetNative(
+            void* (* CXDiagnosticSet *) Diags,
+            uint32 Index)
+        let getDiagnosticInSet _Diags _Index =
+            new CXDiagnostic (getDiagnosticInSetNative ((_Diags : CXDiagnosticSet).Ptr, _Index))
+
+        type CXLoadDiag_Error =
+            | CXLoadDiag_None = 0
+            | CXLoadDiag_Unknown = 1
+            | CXLoadDiag_CannotLoad = 2
+            | CXLoadDiag_InvalidFile = 3
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_loadDiagnostics",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXDiagnosticSet *) loadDiagnosticsNative(
+            string file,
+            int (* CXLoadDiag_Error* *)* error,
+            CXString errorString)
+        // I don't know how to generate an "F# friendly" version of clang_loadDiagnostics
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeDiagnosticSet",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeDiagnosticSetNative(
+            void* (* CXDiagnosticSet *) Diags)
+        let disposeDiagnosticSet _Diags =
+            disposeDiagnosticSetNative ((_Diags : CXDiagnosticSet).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getChildDiagnostics",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXDiagnosticSet *) getChildDiagnosticsNative(
+            void* (* CXDiagnostic *) D)
+        let getChildDiagnostics _D =
+            new CXDiagnosticSet (getChildDiagnosticsNative ((_D : CXDiagnostic).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNumDiagnostics",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getNumDiagnosticsNative(
+            void* (* CXTranslationUnit *) Unit)
+        let getNumDiagnostics _Unit =
+            getNumDiagnosticsNative ((_Unit : CXTranslationUnit).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnostic",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXDiagnostic *) getDiagnosticNative(
+            void* (* CXTranslationUnit *) Unit,
+            uint32 Index)
+        let getDiagnostic _Unit _Index =
+            new CXDiagnostic (getDiagnosticNative ((_Unit : CXTranslationUnit).Ptr, _Index))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticSetFromTU",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXDiagnosticSet *) getDiagnosticSetFromTUNative(
+            void* (* CXTranslationUnit *) Unit)
+        let getDiagnosticSetFromTU _Unit =
+            new CXDiagnosticSet (getDiagnosticSetFromTUNative ((_Unit : CXTranslationUnit).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeDiagnostic",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeDiagnosticNative(
+            void* (* CXDiagnostic *) Diagnostic)
+        let disposeDiagnostic _Diagnostic =
+            disposeDiagnosticNative ((_Diagnostic : CXDiagnostic).Ptr)
+
+        type CXDiagnosticDisplayOptions =
+            | CXDiagnostic_DisplaySourceLocation = 1
+            | CXDiagnostic_DisplayColumn = 2
+            | CXDiagnostic_DisplaySourceRanges = 4
+            | CXDiagnostic_DisplayOption = 8
+            | CXDiagnostic_DisplayCategoryId = 16
+            | CXDiagnostic_DisplayCategoryName = 32
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_formatDiagnostic",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString formatDiagnosticNative(
+            void* (* CXDiagnostic *) Diagnostic,
+            uint32 Options)
+        let formatDiagnostic _Diagnostic _Options =
+            formatDiagnosticNative ((_Diagnostic : CXDiagnostic).Ptr, _Options)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_defaultDiagnosticDisplayOptions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 defaultDiagnosticDisplayOptionsNative()
+        let defaultDiagnosticDisplayOptions () =
+            defaultDiagnosticDisplayOptionsNative ()
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticSeverity",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXDiagnosticSeverity *) getDiagnosticSeverityNative(
+            void* (* CXDiagnostic *) arg0)
+        let getDiagnosticSeverity _arg0 =
+            enum<CXDiagnosticSeverity> (getDiagnosticSeverityNative ((_arg0 : CXDiagnostic).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getDiagnosticLocationNative(
+            void* (* CXDiagnostic *) arg0)
+        let getDiagnosticLocation _arg0 =
+            getDiagnosticLocationNative ((_arg0 : CXDiagnostic).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticSpelling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getDiagnosticSpellingNative(
+            void* (* CXDiagnostic *) arg0)
+        let getDiagnosticSpelling _arg0 =
+            getDiagnosticSpellingNative ((_arg0 : CXDiagnostic).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticOption",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getDiagnosticOptionNative(
+            void* (* CXDiagnostic *) Diag,
+            CXString Disable)
+        // I don't know how to generate an "F# friendly" version of clang_getDiagnosticOption
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticCategory",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getDiagnosticCategoryNative(
+            void* (* CXDiagnostic *) arg0)
+        let getDiagnosticCategory _arg0 =
+            getDiagnosticCategoryNative ((_arg0 : CXDiagnostic).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticCategoryName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getDiagnosticCategoryNameNative(
+            uint32 Category)
+        let getDiagnosticCategoryName _Category =
+            getDiagnosticCategoryNameNative (_Category)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticCategoryText",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getDiagnosticCategoryTextNative(
+            void* (* CXDiagnostic *) arg0)
+        let getDiagnosticCategoryText _arg0 =
+            getDiagnosticCategoryTextNative ((_arg0 : CXDiagnostic).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticNumRanges",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getDiagnosticNumRangesNative(
+            void* (* CXDiagnostic *) arg0)
+        let getDiagnosticNumRanges _arg0 =
+            getDiagnosticNumRangesNative ((_arg0 : CXDiagnostic).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticRange",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange getDiagnosticRangeNative(
+            void* (* CXDiagnostic *) Diagnostic,
+            uint32 Range)
+        let getDiagnosticRange _Diagnostic _Range =
+            getDiagnosticRangeNative ((_Diagnostic : CXDiagnostic).Ptr, _Range)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticNumFixIts",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getDiagnosticNumFixItsNative(
+            void* (* CXDiagnostic *) Diagnostic)
+        let getDiagnosticNumFixIts _Diagnostic =
+            getDiagnosticNumFixItsNative ((_Diagnostic : CXDiagnostic).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDiagnosticFixIt",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getDiagnosticFixItNative(
+            void* (* CXDiagnostic *) Diagnostic,
+            uint32 FixIt,
+            CXSourceRange ReplacementRange)
+        // I don't know how to generate an "F# friendly" version of clang_getDiagnosticFixIt
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTranslationUnitSpelling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getTranslationUnitSpellingNative(
+            void* (* CXTranslationUnit *) CTUnit)
+        let getTranslationUnitSpelling _CTUnit =
+            getTranslationUnitSpellingNative ((_CTUnit : CXTranslationUnit).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_createTranslationUnitFromSourceFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXTranslationUnit *) createTranslationUnitFromSourceFileNative(
+            void* (* CXIndex *) CIdx,
+            string source_filename,
+            int num_clang_command_line_args,
+            void* clang_command_line_args,
+            uint32 num_unsaved_files,
+            CXUnsavedFile* unsaved_files)
+        // I don't know how to generate an "F# friendly" version of clang_createTranslationUnitFromSourceFile
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_createTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXTranslationUnit *) createTranslationUnitNative(
+            void* (* CXIndex *) CIdx,
+            string ast_filename)
+        let createTranslationUnit _CIdx _ast_filename =
+            new CXTranslationUnit (createTranslationUnitNative ((_CIdx : CXIndex).Ptr, _ast_filename))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_createTranslationUnit2",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) createTranslationUnit2Native(
+            void* (* CXIndex *) CIdx,
+            string ast_filename,
+            void* (* CXTranslationUnit* *) out_TU)
+        // I don't know how to generate an "F# friendly" version of clang_createTranslationUnit2
+
+        type CXTranslationUnit_Flags =
+            | CXTranslationUnit_None = 0
+            | CXTranslationUnit_DetailedPreprocessingRecord = 1
+            | CXTranslationUnit_Incomplete = 2
+            | CXTranslationUnit_PrecompiledPreamble = 4
+            | CXTranslationUnit_CacheCompletionResults = 8
+            | CXTranslationUnit_ForSerialization = 16
+            | CXTranslationUnit_CXXChainedPCH = 32
+            | CXTranslationUnit_SkipFunctionBodies = 64
+            | CXTranslationUnit_IncludeBriefCommentsInCodeCompletion = 128
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_defaultEditingTranslationUnitOptions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 defaultEditingTranslationUnitOptionsNative()
+        let defaultEditingTranslationUnitOptions () =
+            defaultEditingTranslationUnitOptionsNative ()
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_parseTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXTranslationUnit *) parseTranslationUnitNative(
+            void* (* CXIndex *) CIdx,
+            string source_filename,
+            void* command_line_args,
+            int num_command_line_args,
+            CXUnsavedFile* unsaved_files,
+            uint32 num_unsaved_files,
+            uint32 options)
+        // I don't know how to generate an "F# friendly" version of clang_parseTranslationUnit
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_parseTranslationUnit2",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXErrorCode *) parseTranslationUnit2Native(
+            void* (* CXIndex *) CIdx,
+            string source_filename,
+            void* command_line_args,
+            int num_command_line_args,
+            CXUnsavedFile* unsaved_files,
+            uint32 num_unsaved_files,
+            uint32 options,
+            void* (* CXTranslationUnit* *) out_TU)
+        // I don't know how to generate an "F# friendly" version of clang_parseTranslationUnit2
+
+        type CXSaveTranslationUnit_Flags =
+            | CXSaveTranslationUnit_None = 0
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_defaultSaveOptions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 defaultSaveOptionsNative(
+            void* (* CXTranslationUnit *) TU)
+        let defaultSaveOptions _TU =
+            defaultSaveOptionsNative ((_TU : CXTranslationUnit).Ptr)
+
+        type CXSaveError =
+            | CXSaveError_None = 0
+            | CXSaveError_Unknown = 1
+            | CXSaveError_TranslationErrors = 2
+            | CXSaveError_InvalidTU = 3
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_saveTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int saveTranslationUnitNative(
+            void* (* CXTranslationUnit *) TU,
+            string FileName,
+            uint32 options)
+        let saveTranslationUnit _TU _FileName _options =
+            saveTranslationUnitNative ((_TU : CXTranslationUnit).Ptr, _FileName, _options)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeTranslationUnitNative(
+            void* (* CXTranslationUnit *) arg0)
+        let disposeTranslationUnit _arg0 =
+            disposeTranslationUnitNative ((_arg0 : CXTranslationUnit).Ptr)
+
+        type CXReparse_Flags =
+            | CXReparse_None = 0
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_defaultReparseOptions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 defaultReparseOptionsNative(
+            void* (* CXTranslationUnit *) TU)
+        let defaultReparseOptions _TU =
+            defaultReparseOptionsNative ((_TU : CXTranslationUnit).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_reparseTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int reparseTranslationUnitNative(
+            void* (* CXTranslationUnit *) TU,
+            uint32 num_unsaved_files,
+            CXUnsavedFile* unsaved_files,
+            uint32 options)
+        // I don't know how to generate an "F# friendly" version of clang_reparseTranslationUnit
+
+        type CXTUResourceUsageKind =
+            | CXTUResourceUsage_AST = 1
+            | CXTUResourceUsage_Identifiers = 2
+            | CXTUResourceUsage_Selectors = 3
+            | CXTUResourceUsage_GlobalCompletionResults = 4
+            | CXTUResourceUsage_SourceManagerContentCache = 5
+            | CXTUResourceUsage_AST_SideTables = 6
+            | CXTUResourceUsage_SourceManager_Membuffer_Malloc = 7
+            | CXTUResourceUsage_SourceManager_Membuffer_MMap = 8
+            | CXTUResourceUsage_ExternalASTSource_Membuffer_Malloc = 9
+            | CXTUResourceUsage_ExternalASTSource_Membuffer_MMap = 10
+            | CXTUResourceUsage_Preprocessor = 11
+            | CXTUResourceUsage_PreprocessingRecord = 12
+            | CXTUResourceUsage_SourceManager_DataStructures = 13
+            | CXTUResourceUsage_Preprocessor_HeaderSearch = 14
+            | CXTUResourceUsage_MEMORY_IN_BYTES_BEGIN = 1
+            | CXTUResourceUsage_MEMORY_IN_BYTES_END = 14
+            | CXTUResourceUsage_First = 1
+            | CXTUResourceUsage_Last = 14
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTUResourceUsageName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* getTUResourceUsageNameNative(
+            int (* CXTUResourceUsageKind *) kind)
+        let getTUResourceUsageName _kind =
+            Marshal.PtrToStringAuto (getTUResourceUsageNameNative ((int (_kind : CXTUResourceUsageKind))))
+
+        [<Struct>]
+        type CXTUResourceUsageEntry =
+            val mutable kind : CXTUResourceUsageKind (* CXTUResourceUsageKind *)
+            val mutable amount : uint64
+
+        [<Struct>]
+        type CXTUResourceUsage =
+            val mutable data : nativeint (* nativeptr<void> *)
+            val mutable numEntries : uint32
+            val mutable entries : CXTUResourceUsageEntry
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCXTUResourceUsage",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXTUResourceUsage getCXTUResourceUsageNative(
+            void* (* CXTranslationUnit *) TU)
+        let getCXTUResourceUsage _TU =
+            getCXTUResourceUsageNative ((_TU : CXTranslationUnit).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeCXTUResourceUsage",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeCXTUResourceUsageNative(
+            CXTUResourceUsage usage)
+        let disposeCXTUResourceUsage _usage =
+            disposeCXTUResourceUsageNative ((_usage : CXTUResourceUsage))
+
+        type CXCursorKind =
+            | CXCursor_UnexposedDecl = 1
+            | CXCursor_StructDecl = 2
+            | CXCursor_UnionDecl = 3
+            | CXCursor_ClassDecl = 4
+            | CXCursor_EnumDecl = 5
+            | CXCursor_FieldDecl = 6
+            | CXCursor_EnumConstantDecl = 7
+            | CXCursor_FunctionDecl = 8
+            | CXCursor_VarDecl = 9
+            | CXCursor_ParmDecl = 10
+            | CXCursor_ObjCInterfaceDecl = 11
+            | CXCursor_ObjCCategoryDecl = 12
+            | CXCursor_ObjCProtocolDecl = 13
+            | CXCursor_ObjCPropertyDecl = 14
+            | CXCursor_ObjCIvarDecl = 15
+            | CXCursor_ObjCInstanceMethodDecl = 16
+            | CXCursor_ObjCClassMethodDecl = 17
+            | CXCursor_ObjCImplementationDecl = 18
+            | CXCursor_ObjCCategoryImplDecl = 19
+            | CXCursor_TypedefDecl = 20
+            | CXCursor_CXXMethod = 21
+            | CXCursor_Namespace = 22
+            | CXCursor_LinkageSpec = 23
+            | CXCursor_Constructor = 24
+            | CXCursor_Destructor = 25
+            | CXCursor_ConversionFunction = 26
+            | CXCursor_TemplateTypeParameter = 27
+            | CXCursor_NonTypeTemplateParameter = 28
+            | CXCursor_TemplateTemplateParameter = 29
+            | CXCursor_FunctionTemplate = 30
+            | CXCursor_ClassTemplate = 31
+            | CXCursor_ClassTemplatePartialSpecialization = 32
+            | CXCursor_NamespaceAlias = 33
+            | CXCursor_UsingDirective = 34
+            | CXCursor_UsingDeclaration = 35
+            | CXCursor_TypeAliasDecl = 36
+            | CXCursor_ObjCSynthesizeDecl = 37
+            | CXCursor_ObjCDynamicDecl = 38
+            | CXCursor_CXXAccessSpecifier = 39
+            | CXCursor_FirstDecl = 1
+            | CXCursor_LastDecl = 39
+            | CXCursor_FirstRef = 40
+            | CXCursor_ObjCSuperClassRef = 40
+            | CXCursor_ObjCProtocolRef = 41
+            | CXCursor_ObjCClassRef = 42
+            | CXCursor_TypeRef = 43
+            | CXCursor_CXXBaseSpecifier = 44
+            | CXCursor_TemplateRef = 45
+            | CXCursor_NamespaceRef = 46
+            | CXCursor_MemberRef = 47
+            | CXCursor_LabelRef = 48
+            | CXCursor_OverloadedDeclRef = 49
+            | CXCursor_VariableRef = 50
+            | CXCursor_LastRef = 50
+            | CXCursor_FirstInvalid = 70
+            | CXCursor_InvalidFile = 70
+            | CXCursor_NoDeclFound = 71
+            | CXCursor_NotImplemented = 72
+            | CXCursor_InvalidCode = 73
+            | CXCursor_LastInvalid = 73
+            | CXCursor_FirstExpr = 100
+            | CXCursor_UnexposedExpr = 100
+            | CXCursor_DeclRefExpr = 101
+            | CXCursor_MemberRefExpr = 102
+            | CXCursor_CallExpr = 103
+            | CXCursor_ObjCMessageExpr = 104
+            | CXCursor_BlockExpr = 105
+            | CXCursor_IntegerLiteral = 106
+            | CXCursor_FloatingLiteral = 107
+            | CXCursor_ImaginaryLiteral = 108
+            | CXCursor_StringLiteral = 109
+            | CXCursor_CharacterLiteral = 110
+            | CXCursor_ParenExpr = 111
+            | CXCursor_UnaryOperator = 112
+            | CXCursor_ArraySubscriptExpr = 113
+            | CXCursor_BinaryOperator = 114
+            | CXCursor_CompoundAssignOperator = 115
+            | CXCursor_ConditionalOperator = 116
+            | CXCursor_CStyleCastExpr = 117
+            | CXCursor_CompoundLiteralExpr = 118
+            | CXCursor_InitListExpr = 119
+            | CXCursor_AddrLabelExpr = 120
+            | CXCursor_StmtExpr = 121
+            | CXCursor_GenericSelectionExpr = 122
+            | CXCursor_GNUNullExpr = 123
+            | CXCursor_CXXStaticCastExpr = 124
+            | CXCursor_CXXDynamicCastExpr = 125
+            | CXCursor_CXXReinterpretCastExpr = 126
+            | CXCursor_CXXConstCastExpr = 127
+            | CXCursor_CXXFunctionalCastExpr = 128
+            | CXCursor_CXXTypeidExpr = 129
+            | CXCursor_CXXBoolLiteralExpr = 130
+            | CXCursor_CXXNullPtrLiteralExpr = 131
+            | CXCursor_CXXThisExpr = 132
+            | CXCursor_CXXThrowExpr = 133
+            | CXCursor_CXXNewExpr = 134
+            | CXCursor_CXXDeleteExpr = 135
+            | CXCursor_UnaryExpr = 136
+            | CXCursor_ObjCStringLiteral = 137
+            | CXCursor_ObjCEncodeExpr = 138
+            | CXCursor_ObjCSelectorExpr = 139
+            | CXCursor_ObjCProtocolExpr = 140
+            | CXCursor_ObjCBridgedCastExpr = 141
+            | CXCursor_PackExpansionExpr = 142
+            | CXCursor_SizeOfPackExpr = 143
+            | CXCursor_LambdaExpr = 144
+            | CXCursor_ObjCBoolLiteralExpr = 145
+            | CXCursor_ObjCSelfExpr = 146
+            | CXCursor_LastExpr = 146
+            | CXCursor_FirstStmt = 200
+            | CXCursor_UnexposedStmt = 200
+            | CXCursor_LabelStmt = 201
+            | CXCursor_CompoundStmt = 202
+            | CXCursor_CaseStmt = 203
+            | CXCursor_DefaultStmt = 204
+            | CXCursor_IfStmt = 205
+            | CXCursor_SwitchStmt = 206
+            | CXCursor_WhileStmt = 207
+            | CXCursor_DoStmt = 208
+            | CXCursor_ForStmt = 209
+            | CXCursor_GotoStmt = 210
+            | CXCursor_IndirectGotoStmt = 211
+            | CXCursor_ContinueStmt = 212
+            | CXCursor_BreakStmt = 213
+            | CXCursor_ReturnStmt = 214
+            | CXCursor_GCCAsmStmt = 215
+            | CXCursor_AsmStmt = 215
+            | CXCursor_ObjCAtTryStmt = 216
+            | CXCursor_ObjCAtCatchStmt = 217
+            | CXCursor_ObjCAtFinallyStmt = 218
+            | CXCursor_ObjCAtThrowStmt = 219
+            | CXCursor_ObjCAtSynchronizedStmt = 220
+            | CXCursor_ObjCAutoreleasePoolStmt = 221
+            | CXCursor_ObjCForCollectionStmt = 222
+            | CXCursor_CXXCatchStmt = 223
+            | CXCursor_CXXTryStmt = 224
+            | CXCursor_CXXForRangeStmt = 225
+            | CXCursor_SEHTryStmt = 226
+            | CXCursor_SEHExceptStmt = 227
+            | CXCursor_SEHFinallyStmt = 228
+            | CXCursor_MSAsmStmt = 229
+            | CXCursor_NullStmt = 230
+            | CXCursor_DeclStmt = 231
+            | CXCursor_OMPParallelDirective = 232
+            | CXCursor_OMPSimdDirective = 233
+            | CXCursor_OMPForDirective = 234
+            | CXCursor_OMPSectionsDirective = 235
+            | CXCursor_OMPSectionDirective = 236
+            | CXCursor_OMPSingleDirective = 237
+            | CXCursor_OMPParallelForDirective = 238
+            | CXCursor_OMPParallelSectionsDirective = 239
+            | CXCursor_OMPTaskDirective = 240
+            | CXCursor_OMPMasterDirective = 241
+            | CXCursor_OMPCriticalDirective = 242
+            | CXCursor_OMPTaskyieldDirective = 243
+            | CXCursor_OMPBarrierDirective = 244
+            | CXCursor_OMPTaskwaitDirective = 245
+            | CXCursor_OMPFlushDirective = 246
+            | CXCursor_SEHLeaveStmt = 247
+            | CXCursor_OMPOrderedDirective = 248
+            | CXCursor_OMPAtomicDirective = 249
+            | CXCursor_OMPForSimdDirective = 250
+            | CXCursor_OMPParallelForSimdDirective = 251
+            | CXCursor_OMPTargetDirective = 252
+            | CXCursor_OMPTeamsDirective = 253
+            | CXCursor_LastStmt = 253
+            | CXCursor_TranslationUnit = 300
+            | CXCursor_FirstAttr = 400
+            | CXCursor_UnexposedAttr = 400
+            | CXCursor_IBActionAttr = 401
+            | CXCursor_IBOutletAttr = 402
+            | CXCursor_IBOutletCollectionAttr = 403
+            | CXCursor_CXXFinalAttr = 404
+            | CXCursor_CXXOverrideAttr = 405
+            | CXCursor_AnnotateAttr = 406
+            | CXCursor_AsmLabelAttr = 407
+            | CXCursor_PackedAttr = 408
+            | CXCursor_PureAttr = 409
+            | CXCursor_ConstAttr = 410
+            | CXCursor_NoDuplicateAttr = 411
+            | CXCursor_CUDAConstantAttr = 412
+            | CXCursor_CUDADeviceAttr = 413
+            | CXCursor_CUDAGlobalAttr = 414
+            | CXCursor_CUDAHostAttr = 415
+            | CXCursor_CUDASharedAttr = 416
+            | CXCursor_LastAttr = 416
+            | CXCursor_PreprocessingDirective = 500
+            | CXCursor_MacroDefinition = 501
+            | CXCursor_MacroExpansion = 502
+            | CXCursor_MacroInstantiation = 502
+            | CXCursor_InclusionDirective = 503
+            | CXCursor_FirstPreprocessing = 500
+            | CXCursor_LastPreprocessing = 503
+            | CXCursor_ModuleImportDecl = 600
+            | CXCursor_FirstExtraDecl = 600
+            | CXCursor_LastExtraDecl = 600
+
+        [<Struct>]
+        type CXCursor =
+            val mutable kind : CXCursorKind (* CXCursorKind *)
+            val mutable xdata : int
+            val mutable data0 : nativeint (* nativeptr<void> *)
+            val mutable data1 : nativeint (* nativeptr<void> *)
+            val mutable data2 : nativeint (* nativeptr<void> *)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNullCursor",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getNullCursorNative()
+        let getNullCursor () =
+            getNullCursorNative ()
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTranslationUnitCursor",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getTranslationUnitCursorNative(
+            void* (* CXTranslationUnit *) arg0)
+        let getTranslationUnitCursor _arg0 =
+            getTranslationUnitCursorNative ((_arg0 : CXTranslationUnit).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_equalCursors",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 equalCursorsNative(
+            CXCursor arg0,
+            CXCursor arg1)
+        let equalCursors _arg0 _arg1 =
+            equalCursorsNative ((_arg0 : CXCursor), (_arg1 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_isNull",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int cursor_isNullNative(
+            CXCursor cursor)
+        let cursor_isNull _cursor =
+            cursor_isNullNative ((_cursor : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_hashCursor",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 hashCursorNative(
+            CXCursor arg0)
+        let hashCursor _arg0 =
+            hashCursorNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorKind",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXCursorKind *) getCursorKindNative(
+            CXCursor arg0)
+        let getCursorKind _arg0 =
+            enum<CXCursorKind> (getCursorKindNative ((_arg0 : CXCursor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isDeclaration",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isDeclarationNative(
+            int (* CXCursorKind *) arg0)
+        let isDeclaration _arg0 =
+            isDeclarationNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isReference",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isReferenceNative(
+            int (* CXCursorKind *) arg0)
+        let isReference _arg0 =
+            isReferenceNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isExpression",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isExpressionNative(
+            int (* CXCursorKind *) arg0)
+        let isExpression _arg0 =
+            isExpressionNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isStatement",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isStatementNative(
+            int (* CXCursorKind *) arg0)
+        let isStatement _arg0 =
+            isStatementNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isAttribute",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isAttributeNative(
+            int (* CXCursorKind *) arg0)
+        let isAttribute _arg0 =
+            isAttributeNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isInvalid",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isInvalidNative(
+            int (* CXCursorKind *) arg0)
+        let isInvalid _arg0 =
+            isInvalidNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isTranslationUnitNative(
+            int (* CXCursorKind *) arg0)
+        let isTranslationUnit _arg0 =
+            isTranslationUnitNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isPreprocessing",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isPreprocessingNative(
+            int (* CXCursorKind *) arg0)
+        let isPreprocessing _arg0 =
+            isPreprocessingNative ((int (_arg0 : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isUnexposed",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isUnexposedNative(
+            int (* CXCursorKind *) arg0)
+        let isUnexposed _arg0 =
+            isUnexposedNative ((int (_arg0 : CXCursorKind)))
+
+        type CXLinkageKind =
+            | CXLinkage_Invalid = 0
+            | CXLinkage_NoLinkage = 1
+            | CXLinkage_Internal = 2
+            | CXLinkage_UniqueExternal = 3
+            | CXLinkage_External = 4
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorLinkage",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXLinkageKind *) getCursorLinkageNative(
+            CXCursor cursor)
+        let getCursorLinkage _cursor =
+            enum<CXLinkageKind> (getCursorLinkageNative ((_cursor : CXCursor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorAvailability",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXAvailabilityKind *) getCursorAvailabilityNative(
+            CXCursor cursor)
+        let getCursorAvailability _cursor =
+            enum<CXAvailabilityKind> (getCursorAvailabilityNative ((_cursor : CXCursor)))
+
+        [<Struct>]
+        type CXPlatformAvailability =
+            val mutable Platform : CXString
+            val mutable Introduced : CXVersion
+            val mutable Deprecated : CXVersion
+            val mutable Obsoleted : CXVersion
+            val mutable Unavailable : int
+            val mutable Message : CXString
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorPlatformAvailability",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int getCursorPlatformAvailabilityNative(
+            CXCursor cursor,
+            int* always_deprecated,
+            CXString deprecated_message,
+            int* always_unavailable,
+            CXString unavailable_message,
+            CXPlatformAvailability availability,
+            int availability_size)
+        // I don't know how to generate an "F# friendly" version of clang_getCursorPlatformAvailability
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeCXPlatformAvailability",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeCXPlatformAvailabilityNative(
+            CXPlatformAvailability availability)
+        // I don't know how to generate an "F# friendly" version of clang_disposeCXPlatformAvailability
+
+        type CXLanguageKind =
+            | CXLanguage_Invalid = 0
+            | CXLanguage_C = 1
+            | CXLanguage_ObjC = 2
+            | CXLanguage_CPlusPlus = 3
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorLanguage",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXLanguageKind *) getCursorLanguageNative(
+            CXCursor cursor)
+        let getCursorLanguage _cursor =
+            enum<CXLanguageKind> (getCursorLanguageNative ((_cursor : CXCursor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXTranslationUnit *) cursor_getTranslationUnitNative(
+            CXCursor arg0)
+        let cursor_getTranslationUnit _arg0 =
+            new CXTranslationUnit (cursor_getTranslationUnitNative ((_arg0 : CXCursor)))
+
+        type CXCursorSet (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_createCXCursorSet",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXCursorSet *) createCXCursorSetNative()
+        let createCXCursorSet () =
+            new CXCursorSet (createCXCursorSetNative ())
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeCXCursorSet",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeCXCursorSetNative(
+            void* (* CXCursorSet *) cset)
+        let disposeCXCursorSet _cset =
+            disposeCXCursorSetNative ((_cset : CXCursorSet).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXCursorSet_contains",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cXCursorSet_containsNative(
+            void* (* CXCursorSet *) cset,
+            CXCursor cursor)
+        let cXCursorSet_contains _cset _cursor =
+            cXCursorSet_containsNative ((_cset : CXCursorSet).Ptr, (_cursor : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXCursorSet_insert",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cXCursorSet_insertNative(
+            void* (* CXCursorSet *) cset,
+            CXCursor cursor)
+        let cXCursorSet_insert _cset _cursor =
+            cXCursorSet_insertNative ((_cset : CXCursorSet).Ptr, (_cursor : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorSemanticParent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getCursorSemanticParentNative(
+            CXCursor cursor)
+        let getCursorSemanticParent _cursor =
+            getCursorSemanticParentNative ((_cursor : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorLexicalParent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getCursorLexicalParentNative(
+            CXCursor cursor)
+        let getCursorLexicalParent _cursor =
+            getCursorLexicalParentNative ((_cursor : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getOverriddenCursors",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getOverriddenCursorsNative(
+            CXCursor cursor,
+            CXCursor overridden,
+            uint32* num_overridden)
+        // I don't know how to generate an "F# friendly" version of clang_getOverriddenCursors
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeOverriddenCursors",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeOverriddenCursorsNative(
+            CXCursor overridden)
+        // I don't know how to generate an "F# friendly" version of clang_disposeOverriddenCursors
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getIncludedFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXFile *) getIncludedFileNative(
+            CXCursor cursor)
+        let getIncludedFile _cursor =
+            new CXFile (getIncludedFileNative ((_cursor : CXCursor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursor",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getCursorNative(
+            void* (* CXTranslationUnit *) arg0,
+            CXSourceLocation arg1)
+        let getCursor _arg0 _arg1 =
+            getCursorNative ((_arg0 : CXTranslationUnit).Ptr, (_arg1 : CXSourceLocation))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getCursorLocationNative(
+            CXCursor arg0)
+        let getCursorLocation _arg0 =
+            getCursorLocationNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorExtent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange getCursorExtentNative(
+            CXCursor arg0)
+        let getCursorExtent _arg0 =
+            getCursorExtentNative ((_arg0 : CXCursor))
+
+        type CXTypeKind =
+            | CXType_Invalid = 0
+            | CXType_Unexposed = 1
+            | CXType_Void = 2
+            | CXType_Bool = 3
+            | CXType_Char_U = 4
+            | CXType_UChar = 5
+            | CXType_Char16 = 6
+            | CXType_Char32 = 7
+            | CXType_UShort = 8
+            | CXType_UInt = 9
+            | CXType_ULong = 10
+            | CXType_ULongLong = 11
+            | CXType_UInt128 = 12
+            | CXType_Char_S = 13
+            | CXType_SChar = 14
+            | CXType_WChar = 15
+            | CXType_Short = 16
+            | CXType_Int = 17
+            | CXType_Long = 18
+            | CXType_LongLong = 19
+            | CXType_Int128 = 20
+            | CXType_Float = 21
+            | CXType_Double = 22
+            | CXType_LongDouble = 23
+            | CXType_NullPtr = 24
+            | CXType_Overload = 25
+            | CXType_Dependent = 26
+            | CXType_ObjCId = 27
+            | CXType_ObjCClass = 28
+            | CXType_ObjCSel = 29
+            | CXType_FirstBuiltin = 2
+            | CXType_LastBuiltin = 29
+            | CXType_Complex = 100
+            | CXType_Pointer = 101
+            | CXType_BlockPointer = 102
+            | CXType_LValueReference = 103
+            | CXType_RValueReference = 104
+            | CXType_Record = 105
+            | CXType_Enum = 106
+            | CXType_Typedef = 107
+            | CXType_ObjCInterface = 108
+            | CXType_ObjCObjectPointer = 109
+            | CXType_FunctionNoProto = 110
+            | CXType_FunctionProto = 111
+            | CXType_ConstantArray = 112
+            | CXType_Vector = 113
+            | CXType_IncompleteArray = 114
+            | CXType_VariableArray = 115
+            | CXType_DependentSizedArray = 116
+            | CXType_MemberPointer = 117
+
+        type CXCallingConv =
+            | CXCallingConv_Default = 0
+            | CXCallingConv_C = 1
+            | CXCallingConv_X86StdCall = 2
+            | CXCallingConv_X86FastCall = 3
+            | CXCallingConv_X86ThisCall = 4
+            | CXCallingConv_X86Pascal = 5
+            | CXCallingConv_AAPCS = 6
+            | CXCallingConv_AAPCS_VFP = 7
+            | CXCallingConv_PnaclCall = 8
+            | CXCallingConv_IntelOclBicc = 9
+            | CXCallingConv_X86_64Win64 = 10
+            | CXCallingConv_X86_64SysV = 11
+            | CXCallingConv_X86VectorCall = 12
+            | CXCallingConv_Invalid = 100
+            | CXCallingConv_Unexposed = 200
+
+        [<Struct>]
+        type CXType =
+            val mutable kind : CXTypeKind (* CXTypeKind *)
+            val mutable data0 : nativeint (* nativeptr<void> *)
+            val mutable data1 : nativeint (* nativeptr<void> *)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getCursorTypeNative(
+            CXCursor C)
+        let getCursorType _C =
+            getCursorTypeNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTypeSpelling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getTypeSpellingNative(
+            CXType CT)
+        let getTypeSpelling _CT =
+            getTypeSpellingNative ((_CT : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTypedefDeclUnderlyingType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getTypedefDeclUnderlyingTypeNative(
+            CXCursor C)
+        let getTypedefDeclUnderlyingType _C =
+            getTypedefDeclUnderlyingTypeNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getEnumDeclIntegerType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getEnumDeclIntegerTypeNative(
+            CXCursor C)
+        let getEnumDeclIntegerType _C =
+            getEnumDeclIntegerTypeNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getEnumConstantDeclValue",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int64 getEnumConstantDeclValueNative(
+            CXCursor C)
+        let getEnumConstantDeclValue _C =
+            getEnumConstantDeclValueNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getEnumConstantDeclUnsignedValue",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint64 getEnumConstantDeclUnsignedValueNative(
+            CXCursor C)
+        let getEnumConstantDeclUnsignedValue _C =
+            getEnumConstantDeclUnsignedValueNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getFieldDeclBitWidth",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int getFieldDeclBitWidthNative(
+            CXCursor C)
+        let getFieldDeclBitWidth _C =
+            getFieldDeclBitWidthNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getNumArguments",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int cursor_getNumArgumentsNative(
+            CXCursor C)
+        let cursor_getNumArguments _C =
+            cursor_getNumArgumentsNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getArgument",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor cursor_getArgumentNative(
+            CXCursor C,
+            uint32 i)
+        let cursor_getArgument _C _i =
+            cursor_getArgumentNative ((_C : CXCursor), _i)
+
+        type CXTemplateArgumentKind =
+            | CXTemplateArgumentKind_Null = 0
+            | CXTemplateArgumentKind_Type = 1
+            | CXTemplateArgumentKind_Declaration = 2
+            | CXTemplateArgumentKind_NullPtr = 3
+            | CXTemplateArgumentKind_Integral = 4
+            | CXTemplateArgumentKind_Template = 5
+            | CXTemplateArgumentKind_TemplateExpansion = 6
+            | CXTemplateArgumentKind_Expression = 7
+            | CXTemplateArgumentKind_Pack = 8
+            | CXTemplateArgumentKind_Invalid = 9
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getNumTemplateArguments",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int cursor_getNumTemplateArgumentsNative(
+            CXCursor C)
+        let cursor_getNumTemplateArguments _C =
+            cursor_getNumTemplateArgumentsNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getTemplateArgumentKind",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXTemplateArgumentKind *) cursor_getTemplateArgumentKindNative(
+            CXCursor C,
+            uint32 I)
+        let cursor_getTemplateArgumentKind _C _I =
+            enum<CXTemplateArgumentKind> (cursor_getTemplateArgumentKindNative ((_C : CXCursor), _I))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getTemplateArgumentType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType cursor_getTemplateArgumentTypeNative(
+            CXCursor C,
+            uint32 I)
+        let cursor_getTemplateArgumentType _C _I =
+            cursor_getTemplateArgumentTypeNative ((_C : CXCursor), _I)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getTemplateArgumentValue",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int64 cursor_getTemplateArgumentValueNative(
+            CXCursor C,
+            uint32 I)
+        let cursor_getTemplateArgumentValue _C _I =
+            cursor_getTemplateArgumentValueNative ((_C : CXCursor), _I)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getTemplateArgumentUnsignedValue",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint64 cursor_getTemplateArgumentUnsignedValueNative(
+            CXCursor C,
+            uint32 I)
+        let cursor_getTemplateArgumentUnsignedValue _C _I =
+            cursor_getTemplateArgumentUnsignedValueNative ((_C : CXCursor), _I)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_equalTypes",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 equalTypesNative(
+            CXType A,
+            CXType B)
+        let equalTypes _A _B =
+            equalTypesNative ((_A : CXType), (_B : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCanonicalType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getCanonicalTypeNative(
+            CXType T)
+        let getCanonicalType _T =
+            getCanonicalTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isConstQualifiedType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isConstQualifiedTypeNative(
+            CXType T)
+        let isConstQualifiedType _T =
+            isConstQualifiedTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isVolatileQualifiedType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isVolatileQualifiedTypeNative(
+            CXType T)
+        let isVolatileQualifiedType _T =
+            isVolatileQualifiedTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isRestrictQualifiedType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isRestrictQualifiedTypeNative(
+            CXType T)
+        let isRestrictQualifiedType _T =
+            isRestrictQualifiedTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getPointeeType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getPointeeTypeNative(
+            CXType T)
+        let getPointeeType _T =
+            getPointeeTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTypeDeclaration",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getTypeDeclarationNative(
+            CXType T)
+        let getTypeDeclaration _T =
+            getTypeDeclarationNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDeclObjCTypeEncoding",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getDeclObjCTypeEncodingNative(
+            CXCursor C)
+        let getDeclObjCTypeEncoding _C =
+            getDeclObjCTypeEncodingNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTypeKindSpelling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getTypeKindSpellingNative(
+            int (* CXTypeKind *) K)
+        let getTypeKindSpelling _K =
+            getTypeKindSpellingNative ((int (_K : CXTypeKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getFunctionTypeCallingConv",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXCallingConv *) getFunctionTypeCallingConvNative(
+            CXType T)
+        let getFunctionTypeCallingConv _T =
+            enum<CXCallingConv> (getFunctionTypeCallingConvNative ((_T : CXType)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getResultType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getResultTypeNative(
+            CXType T)
+        let getResultType _T =
+            getResultTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNumArgTypes",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int getNumArgTypesNative(
+            CXType T)
+        let getNumArgTypes _T =
+            getNumArgTypesNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getArgType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getArgTypeNative(
+            CXType T,
+            uint32 i)
+        let getArgType _T _i =
+            getArgTypeNative ((_T : CXType), _i)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isFunctionTypeVariadic",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isFunctionTypeVariadicNative(
+            CXType T)
+        let isFunctionTypeVariadic _T =
+            isFunctionTypeVariadicNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorResultType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getCursorResultTypeNative(
+            CXCursor C)
+        let getCursorResultType _C =
+            getCursorResultTypeNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isPODType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isPODTypeNative(
+            CXType T)
+        let isPODType _T =
+            isPODTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getElementType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getElementTypeNative(
+            CXType T)
+        let getElementType _T =
+            getElementTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNumElements",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int64 getNumElementsNative(
+            CXType T)
+        let getNumElements _T =
+            getNumElementsNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getArrayElementType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getArrayElementTypeNative(
+            CXType T)
+        let getArrayElementType _T =
+            getArrayElementTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getArraySize",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int64 getArraySizeNative(
+            CXType T)
+        let getArraySize _T =
+            getArraySizeNative ((_T : CXType))
+
+        type CXTypeLayoutError =
+            | CXTypeLayoutError_Invalid = -1
+            | CXTypeLayoutError_Incomplete = -2
+            | CXTypeLayoutError_Dependent = -3
+            | CXTypeLayoutError_NotConstantSize = -4
+            | CXTypeLayoutError_InvalidFieldName = -5
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Type_getAlignOf",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int64 type_getAlignOfNative(
+            CXType T)
+        let type_getAlignOf _T =
+            type_getAlignOfNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Type_getClassType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType type_getClassTypeNative(
+            CXType T)
+        let type_getClassType _T =
+            type_getClassTypeNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Type_getSizeOf",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int64 type_getSizeOfNative(
+            CXType T)
+        let type_getSizeOf _T =
+            type_getSizeOfNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Type_getOffsetOf",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int64 type_getOffsetOfNative(
+            CXType T,
+            string S)
+        let type_getOffsetOf _T _S =
+            type_getOffsetOfNative ((_T : CXType), _S)
+
+        type CXRefQualifierKind =
+            | CXRefQualifier_None = 0
+            | CXRefQualifier_LValue = 1
+            | CXRefQualifier_RValue = 2
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Type_getNumTemplateArguments",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int type_getNumTemplateArgumentsNative(
+            CXType T)
+        let type_getNumTemplateArguments _T =
+            type_getNumTemplateArgumentsNative ((_T : CXType))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Type_getTemplateArgumentAsType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType type_getTemplateArgumentAsTypeNative(
+            CXType T,
+            uint32 i)
+        let type_getTemplateArgumentAsType _T _i =
+            type_getTemplateArgumentAsTypeNative ((_T : CXType), _i)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Type_getCXXRefQualifier",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXRefQualifierKind *) type_getCXXRefQualifierNative(
+            CXType T)
+        let type_getCXXRefQualifier _T =
+            enum<CXRefQualifierKind> (type_getCXXRefQualifierNative ((_T : CXType)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_isBitField",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cursor_isBitFieldNative(
+            CXCursor C)
+        let cursor_isBitField _C =
+            cursor_isBitFieldNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isVirtualBase",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isVirtualBaseNative(
+            CXCursor arg0)
+        let isVirtualBase _arg0 =
+            isVirtualBaseNative ((_arg0 : CXCursor))
+
+        type CX_CXXAccessSpecifier =
+            | CX_CXXInvalidAccessSpecifier = 0
+            | CX_CXXPublic = 1
+            | CX_CXXProtected = 2
+            | CX_CXXPrivate = 3
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCXXAccessSpecifier",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CX_CXXAccessSpecifier *) getCXXAccessSpecifierNative(
+            CXCursor arg0)
+        let getCXXAccessSpecifier _arg0 =
+            enum<CX_CXXAccessSpecifier> (getCXXAccessSpecifierNative ((_arg0 : CXCursor)))
+
+        type CX_StorageClass =
+            | CX_SC_Invalid = 0
+            | CX_SC_None = 1
+            | CX_SC_Extern = 2
+            | CX_SC_Static = 3
+            | CX_SC_PrivateExtern = 4
+            | CX_SC_OpenCLWorkGroupLocal = 5
+            | CX_SC_Auto = 6
+            | CX_SC_Register = 7
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getStorageClass",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CX_StorageClass *) cursor_getStorageClassNative(
+            CXCursor arg0)
+        let cursor_getStorageClass _arg0 =
+            enum<CX_StorageClass> (cursor_getStorageClassNative ((_arg0 : CXCursor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNumOverloadedDecls",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getNumOverloadedDeclsNative(
+            CXCursor cursor)
+        let getNumOverloadedDecls _cursor =
+            getNumOverloadedDeclsNative ((_cursor : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getOverloadedDecl",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getOverloadedDeclNative(
+            CXCursor cursor,
+            uint32 index)
+        let getOverloadedDecl _cursor _index =
+            getOverloadedDeclNative ((_cursor : CXCursor), _index)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getIBOutletCollectionType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType getIBOutletCollectionTypeNative(
+            CXCursor arg0)
+        let getIBOutletCollectionType _arg0 =
+            getIBOutletCollectionTypeNative ((_arg0 : CXCursor))
+
+        type CXChildVisitResult =
+            | CXChildVisit_Break = 0
+            | CXChildVisit_Continue = 1
+            | CXChildVisit_Recurse = 2
+
+        type CXCursorVisitor = delegate of CXCursor * CXCursor * nativeint (* CXClientData *) -> CXChildVisitResult (* CXChildVisitResult *)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_visitChildren",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 visitChildrenNative(
+            CXCursor parent,
+            CXCursorVisitor (* function pointer *) visitor,
+            void* (* CXClientData *) client_data)
+        let visitChildren _parent _visitor _client_data =
+            visitChildrenNative ((_parent : CXCursor), _visitor, (_client_data : CXClientData).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorUSR",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCursorUSRNative(
+            CXCursor arg0)
+        let getCursorUSR _arg0 =
+            getCursorUSRNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_constructUSR_ObjCClass",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString constructUSR_ObjCClassNative(
+            string class_name)
+        let constructUSR_ObjCClass _class_name =
+            constructUSR_ObjCClassNative (_class_name)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_constructUSR_ObjCCategory",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString constructUSR_ObjCCategoryNative(
+            string class_name,
+            string category_name)
+        let constructUSR_ObjCCategory _class_name _category_name =
+            constructUSR_ObjCCategoryNative (_class_name, _category_name)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_constructUSR_ObjCProtocol",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString constructUSR_ObjCProtocolNative(
+            string protocol_name)
+        let constructUSR_ObjCProtocol _protocol_name =
+            constructUSR_ObjCProtocolNative (_protocol_name)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_constructUSR_ObjCIvar",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString constructUSR_ObjCIvarNative(
+            string name,
+            CXString classUSR)
+        let constructUSR_ObjCIvar _name _classUSR =
+            constructUSR_ObjCIvarNative (_name, (_classUSR : CXString))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_constructUSR_ObjCMethod",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString constructUSR_ObjCMethodNative(
+            string name,
+            uint32 isInstanceMethod,
+            CXString classUSR)
+        let constructUSR_ObjCMethod _name _isInstanceMethod _classUSR =
+            constructUSR_ObjCMethodNative (_name, _isInstanceMethod, (_classUSR : CXString))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_constructUSR_ObjCProperty",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString constructUSR_ObjCPropertyNative(
+            string property,
+            CXString classUSR)
+        let constructUSR_ObjCProperty _property _classUSR =
+            constructUSR_ObjCPropertyNative (_property, (_classUSR : CXString))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorSpelling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCursorSpellingNative(
+            CXCursor arg0)
+        let getCursorSpelling _arg0 =
+            getCursorSpellingNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getSpellingNameRange",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange cursor_getSpellingNameRangeNative(
+            CXCursor arg0,
+            uint32 pieceIndex,
+            uint32 options)
+        let cursor_getSpellingNameRange _arg0 _pieceIndex _options =
+            cursor_getSpellingNameRangeNative ((_arg0 : CXCursor), _pieceIndex, _options)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorDisplayName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCursorDisplayNameNative(
+            CXCursor arg0)
+        let getCursorDisplayName _arg0 =
+            getCursorDisplayNameNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorReferenced",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getCursorReferencedNative(
+            CXCursor arg0)
+        let getCursorReferenced _arg0 =
+            getCursorReferencedNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorDefinition",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getCursorDefinitionNative(
+            CXCursor arg0)
+        let getCursorDefinition _arg0 =
+            getCursorDefinitionNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_isCursorDefinition",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 isCursorDefinitionNative(
+            CXCursor arg0)
+        let isCursorDefinition _arg0 =
+            isCursorDefinitionNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCanonicalCursor",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getCanonicalCursorNative(
+            CXCursor arg0)
+        let getCanonicalCursor _arg0 =
+            getCanonicalCursorNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getObjCSelectorIndex",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int cursor_getObjCSelectorIndexNative(
+            CXCursor arg0)
+        let cursor_getObjCSelectorIndex _arg0 =
+            cursor_getObjCSelectorIndexNative ((_arg0 : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_isDynamicCall",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int cursor_isDynamicCallNative(
+            CXCursor C)
+        let cursor_isDynamicCall _C =
+            cursor_isDynamicCallNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getReceiverType",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXType cursor_getReceiverTypeNative(
+            CXCursor C)
+        let cursor_getReceiverType _C =
+            cursor_getReceiverTypeNative ((_C : CXCursor))
+
+        type CXObjCPropertyAttrKind =
+            | CXObjCPropertyAttr_noattr = 0
+            | CXObjCPropertyAttr_readonly = 1
+            | CXObjCPropertyAttr_getter = 2
+            | CXObjCPropertyAttr_assign = 4
+            | CXObjCPropertyAttr_readwrite = 8
+            | CXObjCPropertyAttr_retain = 16
+            | CXObjCPropertyAttr_copy = 32
+            | CXObjCPropertyAttr_nonatomic = 64
+            | CXObjCPropertyAttr_setter = 128
+            | CXObjCPropertyAttr_atomic = 256
+            | CXObjCPropertyAttr_weak = 512
+            | CXObjCPropertyAttr_strong = 1024
+            | CXObjCPropertyAttr_unsafe_unretained = 2048
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getObjCPropertyAttributes",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cursor_getObjCPropertyAttributesNative(
+            CXCursor C,
+            uint32 reserved)
+        let cursor_getObjCPropertyAttributes _C _reserved =
+            cursor_getObjCPropertyAttributesNative ((_C : CXCursor), _reserved)
+
+        type CXObjCDeclQualifierKind =
+            | CXObjCDeclQualifier_None = 0
+            | CXObjCDeclQualifier_In = 1
+            | CXObjCDeclQualifier_Inout = 2
+            | CXObjCDeclQualifier_Out = 4
+            | CXObjCDeclQualifier_Bycopy = 8
+            | CXObjCDeclQualifier_Byref = 16
+            | CXObjCDeclQualifier_Oneway = 32
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getObjCDeclQualifiers",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cursor_getObjCDeclQualifiersNative(
+            CXCursor C)
+        let cursor_getObjCDeclQualifiers _C =
+            cursor_getObjCDeclQualifiersNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_isObjCOptional",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cursor_isObjCOptionalNative(
+            CXCursor C)
+        let cursor_isObjCOptional _C =
+            cursor_isObjCOptionalNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_isVariadic",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cursor_isVariadicNative(
+            CXCursor C)
+        let cursor_isVariadic _C =
+            cursor_isVariadicNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getCommentRange",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange cursor_getCommentRangeNative(
+            CXCursor C)
+        let cursor_getCommentRange _C =
+            cursor_getCommentRangeNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getRawCommentText",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString cursor_getRawCommentTextNative(
+            CXCursor C)
+        let cursor_getRawCommentText _C =
+            cursor_getRawCommentTextNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getBriefCommentText",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString cursor_getBriefCommentTextNative(
+            CXCursor C)
+        let cursor_getBriefCommentText _C =
+            cursor_getBriefCommentTextNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getMangling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString cursor_getManglingNative(
+            CXCursor arg0)
+        let cursor_getMangling _arg0 =
+            cursor_getManglingNative ((_arg0 : CXCursor))
+
+        type CXModule (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Cursor_getModule",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXModule *) cursor_getModuleNative(
+            CXCursor C)
+        let cursor_getModule _C =
+            new CXModule (cursor_getModuleNative ((_C : CXCursor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getModuleForFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXModule *) getModuleForFileNative(
+            void* (* CXTranslationUnit *) arg0,
+            void* (* CXFile *) arg1)
+        let getModuleForFile _arg0 _arg1 =
+            new CXModule (getModuleForFileNative ((_arg0 : CXTranslationUnit).Ptr, (_arg1 : CXFile).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Module_getASTFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXFile *) module_getASTFileNative(
+            void* (* CXModule *) Module)
+        let module_getASTFile _Module =
+            new CXFile (module_getASTFileNative ((_Module : CXModule).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Module_getParent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXModule *) module_getParentNative(
+            void* (* CXModule *) Module)
+        let module_getParent _Module =
+            new CXModule (module_getParentNative ((_Module : CXModule).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Module_getName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString module_getNameNative(
+            void* (* CXModule *) Module)
+        let module_getName _Module =
+            module_getNameNative ((_Module : CXModule).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Module_getFullName",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString module_getFullNameNative(
+            void* (* CXModule *) Module)
+        let module_getFullName _Module =
+            module_getFullNameNative ((_Module : CXModule).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Module_isSystem",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int module_isSystemNative(
+            void* (* CXModule *) Module)
+        let module_isSystem _Module =
+            module_isSystemNative ((_Module : CXModule).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Module_getNumTopLevelHeaders",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 module_getNumTopLevelHeadersNative(
+            void* (* CXTranslationUnit *) arg0,
+            void* (* CXModule *) Module)
+        let module_getNumTopLevelHeaders _arg0 _Module =
+            module_getNumTopLevelHeadersNative ((_arg0 : CXTranslationUnit).Ptr, (_Module : CXModule).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_Module_getTopLevelHeader",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXFile *) module_getTopLevelHeaderNative(
+            void* (* CXTranslationUnit *) arg0,
+            void* (* CXModule *) Module,
+            uint32 Index)
+        let module_getTopLevelHeader _arg0 _Module _Index =
+            new CXFile (module_getTopLevelHeaderNative ((_arg0 : CXTranslationUnit).Ptr, (_Module : CXModule).Ptr, _Index))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXXMethod_isPureVirtual",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cXXMethod_isPureVirtualNative(
+            CXCursor C)
+        let cXXMethod_isPureVirtual _C =
+            cXXMethod_isPureVirtualNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXXMethod_isStatic",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cXXMethod_isStaticNative(
+            CXCursor C)
+        let cXXMethod_isStatic _C =
+            cXXMethod_isStaticNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXXMethod_isVirtual",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cXXMethod_isVirtualNative(
+            CXCursor C)
+        let cXXMethod_isVirtual _C =
+            cXXMethod_isVirtualNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_CXXMethod_isConst",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 cXXMethod_isConstNative(
+            CXCursor C)
+        let cXXMethod_isConst _C =
+            cXXMethod_isConstNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTemplateCursorKind",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXCursorKind *) getTemplateCursorKindNative(
+            CXCursor C)
+        let getTemplateCursorKind _C =
+            enum<CXCursorKind> (getTemplateCursorKindNative ((_C : CXCursor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getSpecializedCursorTemplate",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCursor getSpecializedCursorTemplateNative(
+            CXCursor C)
+        let getSpecializedCursorTemplate _C =
+            getSpecializedCursorTemplateNative ((_C : CXCursor))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorReferenceNameRange",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange getCursorReferenceNameRangeNative(
+            CXCursor C,
+            uint32 NameFlags,
+            uint32 PieceIndex)
+        let getCursorReferenceNameRange _C _NameFlags _PieceIndex =
+            getCursorReferenceNameRangeNative ((_C : CXCursor), _NameFlags, _PieceIndex)
+
+        type CXNameRefFlags =
+            | CXNameRange_WantQualifier = 1
+            | CXNameRange_WantTemplateArgs = 2
+            | CXNameRange_WantSinglePiece = 4
+
+        type CXTokenKind =
+            | CXToken_Punctuation = 0
+            | CXToken_Keyword = 1
+            | CXToken_Identifier = 2
+            | CXToken_Literal = 3
+            | CXToken_Comment = 4
+
+        [<Struct>]
+        type CXToken =
+            val mutable int_data0 : uint32
+            val mutable int_data1 : uint32
+            val mutable int_data2 : uint32
+            val mutable int_data3 : uint32
+            val mutable ptr_data : nativeint (* nativeptr<void> *)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTokenKind",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXTokenKind *) getTokenKindNative(
+            CXToken arg0)
+        let getTokenKind _arg0 =
+            enum<CXTokenKind> (getTokenKindNative ((_arg0 : CXToken)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTokenSpelling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getTokenSpellingNative(
+            void* (* CXTranslationUnit *) arg0,
+            CXToken arg1)
+        let getTokenSpelling _arg0 _arg1 =
+            getTokenSpellingNative ((_arg0 : CXTranslationUnit).Ptr, (_arg1 : CXToken))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTokenLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation getTokenLocationNative(
+            void* (* CXTranslationUnit *) arg0,
+            CXToken arg1)
+        let getTokenLocation _arg0 _arg1 =
+            getTokenLocationNative ((_arg0 : CXTranslationUnit).Ptr, (_arg1 : CXToken))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getTokenExtent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceRange getTokenExtentNative(
+            void* (* CXTranslationUnit *) arg0,
+            CXToken arg1)
+        let getTokenExtent _arg0 _arg1 =
+            getTokenExtentNative ((_arg0 : CXTranslationUnit).Ptr, (_arg1 : CXToken))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_tokenize",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void tokenizeNative(
+            void* (* CXTranslationUnit *) TU,
+            CXSourceRange Range,
+            CXToken Tokens,
+            uint32* NumTokens)
+        // I don't know how to generate an "F# friendly" version of clang_tokenize
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_annotateTokens",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void annotateTokensNative(
+            void* (* CXTranslationUnit *) TU,
+            CXToken Tokens,
+            uint32 NumTokens,
+            CXCursor Cursors)
+        // I don't know how to generate an "F# friendly" version of clang_annotateTokens
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeTokens",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeTokensNative(
+            void* (* CXTranslationUnit *) TU,
+            CXToken Tokens,
+            uint32 NumTokens)
+        // I don't know how to generate an "F# friendly" version of clang_disposeTokens
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorKindSpelling",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCursorKindSpellingNative(
+            int (* CXCursorKind *) Kind)
+        let getCursorKindSpelling _Kind =
+            getCursorKindSpellingNative ((int (_Kind : CXCursorKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getDefinitionSpellingAndExtent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getDefinitionSpellingAndExtentNative(
+            CXCursor arg0,
+            void* startBuf,
+            void* endBuf,
+            uint32* startLine,
+            uint32* startColumn,
+            uint32* endLine,
+            uint32* endColumn)
+        // I don't know how to generate an "F# friendly" version of clang_getDefinitionSpellingAndExtent
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_enableStackTraces",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void enableStackTracesNative()
+        let enableStackTraces () =
+            enableStackTracesNative ()
+
+        type Fn = delegate of nativeint (* nativeptr<void> *) -> Unit
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_executeOnThread",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void executeOnThreadNative(
+            Fn (* void ( *fn )( void* ) *) fn,
+            void* user_data,
+            uint32 stack_size)
+        // I don't know how to generate an "F# friendly" version of clang_executeOnThread
+
+        type CXCompletionString (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<Struct>]
+        type CXCompletionResult =
+            val mutable CursorKind : CXCursorKind (* CXCursorKind *)
+            val mutable CompletionString : nativeint (* CXCompletionString *)
+
+        type CXCompletionChunkKind =
+            | CXCompletionChunk_Optional = 0
+            | CXCompletionChunk_TypedText = 1
+            | CXCompletionChunk_Text = 2
+            | CXCompletionChunk_Placeholder = 3
+            | CXCompletionChunk_Informative = 4
+            | CXCompletionChunk_CurrentParameter = 5
+            | CXCompletionChunk_LeftParen = 6
+            | CXCompletionChunk_RightParen = 7
+            | CXCompletionChunk_LeftBracket = 8
+            | CXCompletionChunk_RightBracket = 9
+            | CXCompletionChunk_LeftBrace = 10
+            | CXCompletionChunk_RightBrace = 11
+            | CXCompletionChunk_LeftAngle = 12
+            | CXCompletionChunk_RightAngle = 13
+            | CXCompletionChunk_Comma = 14
+            | CXCompletionChunk_ResultType = 15
+            | CXCompletionChunk_Colon = 16
+            | CXCompletionChunk_SemiColon = 17
+            | CXCompletionChunk_Equal = 18
+            | CXCompletionChunk_HorizontalSpace = 19
+            | CXCompletionChunk_VerticalSpace = 20
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionChunkKind",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXCompletionChunkKind *) getCompletionChunkKindNative(
+            void* (* CXCompletionString *) completion_string,
+            uint32 chunk_number)
+        let getCompletionChunkKind _completion_string _chunk_number =
+            enum<CXCompletionChunkKind> (getCompletionChunkKindNative ((_completion_string : CXCompletionString).Ptr, _chunk_number))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionChunkText",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCompletionChunkTextNative(
+            void* (* CXCompletionString *) completion_string,
+            uint32 chunk_number)
+        let getCompletionChunkText _completion_string _chunk_number =
+            getCompletionChunkTextNative ((_completion_string : CXCompletionString).Ptr, _chunk_number)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionChunkCompletionString",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXCompletionString *) getCompletionChunkCompletionStringNative(
+            void* (* CXCompletionString *) completion_string,
+            uint32 chunk_number)
+        let getCompletionChunkCompletionString _completion_string _chunk_number =
+            new CXCompletionString (getCompletionChunkCompletionStringNative ((_completion_string : CXCompletionString).Ptr, _chunk_number))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getNumCompletionChunks",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getNumCompletionChunksNative(
+            void* (* CXCompletionString *) completion_string)
+        let getNumCompletionChunks _completion_string =
+            getNumCompletionChunksNative ((_completion_string : CXCompletionString).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionPriority",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getCompletionPriorityNative(
+            void* (* CXCompletionString *) completion_string)
+        let getCompletionPriority _completion_string =
+            getCompletionPriorityNative ((_completion_string : CXCompletionString).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionAvailability",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXAvailabilityKind *) getCompletionAvailabilityNative(
+            void* (* CXCompletionString *) completion_string)
+        let getCompletionAvailability _completion_string =
+            enum<CXAvailabilityKind> (getCompletionAvailabilityNative ((_completion_string : CXCompletionString).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionNumAnnotations",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 getCompletionNumAnnotationsNative(
+            void* (* CXCompletionString *) completion_string)
+        let getCompletionNumAnnotations _completion_string =
+            getCompletionNumAnnotationsNative ((_completion_string : CXCompletionString).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionAnnotation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCompletionAnnotationNative(
+            void* (* CXCompletionString *) completion_string,
+            uint32 annotation_number)
+        let getCompletionAnnotation _completion_string _annotation_number =
+            getCompletionAnnotationNative ((_completion_string : CXCompletionString).Ptr, _annotation_number)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionParent",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCompletionParentNative(
+            void* (* CXCompletionString *) completion_string,
+            int (* CXCursorKind* *)* kind)
+        // I don't know how to generate an "F# friendly" version of clang_getCompletionParent
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCompletionBriefComment",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getCompletionBriefCommentNative(
+            void* (* CXCompletionString *) completion_string)
+        let getCompletionBriefComment _completion_string =
+            getCompletionBriefCommentNative ((_completion_string : CXCompletionString).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getCursorCompletionString",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXCompletionString *) getCursorCompletionStringNative(
+            CXCursor cursor)
+        let getCursorCompletionString _cursor =
+            new CXCompletionString (getCursorCompletionStringNative ((_cursor : CXCursor)))
+
+        [<Struct>]
+        type CXCodeCompleteResults =
+            val mutable Results : CXCompletionResult
+            val mutable NumResults : uint32
+
+        type CXCodeComplete_Flags =
+            | CXCodeComplete_IncludeMacros = 1
+            | CXCodeComplete_IncludeCodePatterns = 2
+            | CXCodeComplete_IncludeBriefComments = 4
+
+        type CXCompletionContext =
+            | CXCompletionContext_Unexposed = 0
+            | CXCompletionContext_AnyType = 1
+            | CXCompletionContext_AnyValue = 2
+            | CXCompletionContext_ObjCObjectValue = 4
+            | CXCompletionContext_ObjCSelectorValue = 8
+            | CXCompletionContext_CXXClassTypeValue = 16
+            | CXCompletionContext_DotMemberAccess = 32
+            | CXCompletionContext_ArrowMemberAccess = 64
+            | CXCompletionContext_ObjCPropertyAccess = 128
+            | CXCompletionContext_EnumTag = 256
+            | CXCompletionContext_UnionTag = 512
+            | CXCompletionContext_StructTag = 1024
+            | CXCompletionContext_ClassTag = 2048
+            | CXCompletionContext_Namespace = 4096
+            | CXCompletionContext_NestedNameSpecifier = 8192
+            | CXCompletionContext_ObjCInterface = 16384
+            | CXCompletionContext_ObjCProtocol = 32768
+            | CXCompletionContext_ObjCCategory = 65536
+            | CXCompletionContext_ObjCInstanceMessage = 131072
+            | CXCompletionContext_ObjCClassMessage = 262144
+            | CXCompletionContext_ObjCSelectorName = 524288
+            | CXCompletionContext_MacroName = 1048576
+            | CXCompletionContext_NaturalLanguage = 2097152
+            | CXCompletionContext_Unknown = 4194303
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_defaultCodeCompleteOptions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 defaultCodeCompleteOptionsNative()
+        let defaultCodeCompleteOptions () =
+            defaultCodeCompleteOptionsNative ()
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_codeCompleteAt",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXCodeCompleteResults codeCompleteAtNative(
+            void* (* CXTranslationUnit *) TU,
+            string complete_filename,
+            uint32 complete_line,
+            uint32 complete_column,
+            CXUnsavedFile* unsaved_files,
+            uint32 num_unsaved_files,
+            uint32 options)
+        // I don't know how to generate an "F# friendly" version of clang_codeCompleteAt
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_sortCodeCompletionResults",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void sortCodeCompletionResultsNative(
+            CXCompletionResult Results,
+            uint32 NumResults)
+        // I don't know how to generate an "F# friendly" version of clang_sortCodeCompletionResults
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_disposeCodeCompleteResults",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeCodeCompleteResultsNative(
+            CXCodeCompleteResults Results)
+        // I don't know how to generate an "F# friendly" version of clang_disposeCodeCompleteResults
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_codeCompleteGetNumDiagnostics",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 codeCompleteGetNumDiagnosticsNative(
+            CXCodeCompleteResults Results)
+        // I don't know how to generate an "F# friendly" version of clang_codeCompleteGetNumDiagnostics
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_codeCompleteGetDiagnostic",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXDiagnostic *) codeCompleteGetDiagnosticNative(
+            CXCodeCompleteResults Results,
+            uint32 Index)
+        // I don't know how to generate an "F# friendly" version of clang_codeCompleteGetDiagnostic
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_codeCompleteGetContexts",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint64 codeCompleteGetContextsNative(
+            CXCodeCompleteResults Results)
+        // I don't know how to generate an "F# friendly" version of clang_codeCompleteGetContexts
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_codeCompleteGetContainerKind",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXCursorKind *) codeCompleteGetContainerKindNative(
+            CXCodeCompleteResults Results,
+            uint32* IsIncomplete)
+        // I don't know how to generate an "F# friendly" version of clang_codeCompleteGetContainerKind
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_codeCompleteGetContainerUSR",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString codeCompleteGetContainerUSRNative(
+            CXCodeCompleteResults Results)
+        // I don't know how to generate an "F# friendly" version of clang_codeCompleteGetContainerUSR
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_codeCompleteGetObjCSelector",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString codeCompleteGetObjCSelectorNative(
+            CXCodeCompleteResults Results)
+        // I don't know how to generate an "F# friendly" version of clang_codeCompleteGetObjCSelector
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getClangVersion",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXString getClangVersionNative()
+        let getClangVersion () =
+            getClangVersionNative ()
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_toggleCrashRecovery",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void toggleCrashRecoveryNative(
+            uint32 isEnabled)
+        let toggleCrashRecovery _isEnabled =
+            toggleCrashRecoveryNative (_isEnabled)
+
+        type CXInclusionVisitor = delegate of nativeint (* CXFile *) * CXSourceLocation * uint32 * nativeint (* CXClientData *) -> Unit
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getInclusions",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void getInclusionsNative(
+            void* (* CXTranslationUnit *) tu,
+            CXInclusionVisitor (* function pointer *) visitor,
+            void* (* CXClientData *) client_data)
+        let getInclusions _tu _visitor _client_data =
+            getInclusionsNative ((_tu : CXTranslationUnit).Ptr, _visitor, (_client_data : CXClientData).Ptr)
+
+        type CXRemapping (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getRemappings",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXRemapping *) getRemappingsNative(
+            string path)
+        let getRemappings _path =
+            new CXRemapping (getRemappingsNative (_path))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_getRemappingsFromFileList",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXRemapping *) getRemappingsFromFileListNative(
+            void* filePaths,
+            uint32 numFiles)
+        // I don't know how to generate an "F# friendly" version of clang_getRemappingsFromFileList
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_remap_getNumFiles",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern uint32 remap_getNumFilesNative(
+            void* (* CXRemapping *) arg0)
+        let remap_getNumFiles _arg0 =
+            remap_getNumFilesNative ((_arg0 : CXRemapping).Ptr)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_remap_getFilenames",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void remap_getFilenamesNative(
+            void* (* CXRemapping *) arg0,
+            uint32 index,
+            CXString original,
+            CXString transformed)
+        // I don't know how to generate an "F# friendly" version of clang_remap_getFilenames
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_remap_dispose",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void remap_disposeNative(
+            void* (* CXRemapping *) arg0)
+        let remap_dispose _arg0 =
+            remap_disposeNative ((_arg0 : CXRemapping).Ptr)
+
+        type CXVisitorResult =
+            | CXVisit_Break = 0
+            | CXVisit_Continue = 1
+
+        type Visit = delegate of nativeint (* nativeptr<void> *) * CXCursor * CXSourceRange -> CXVisitorResult (* CXVisitorResult *)
+
+        [<Struct>]
+        type CXCursorAndRangeVisitor =
+            val mutable context : nativeint (* nativeptr<void> *)
+            val mutable visit : Visit (* CXVisitorResult ( *visit )( void*, CXCursor, CXSourceRange ) *)
+
+        type CXResult =
+            | CXResult_Success = 0
+            | CXResult_Invalid = 1
+            | CXResult_VisitBreak = 2
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_findReferencesInFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXResult *) findReferencesInFileNative(
+            CXCursor cursor,
+            void* (* CXFile *) file,
+            CXCursorAndRangeVisitor visitor)
+        let findReferencesInFile _cursor _file _visitor =
+            enum<CXResult> (findReferencesInFileNative ((_cursor : CXCursor), (_file : CXFile).Ptr, (_visitor : CXCursorAndRangeVisitor)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_findIncludesInFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int (* CXResult *) findIncludesInFileNative(
+            void* (* CXTranslationUnit *) TU,
+            void* (* CXFile *) file,
+            CXCursorAndRangeVisitor visitor)
+        let findIncludesInFile _TU _file _visitor =
+            enum<CXResult> (findIncludesInFileNative ((_TU : CXTranslationUnit).Ptr, (_file : CXFile).Ptr, (_visitor : CXCursorAndRangeVisitor)))
+
+        type CXIdxClientFile (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXIdxClientEntity (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXIdxClientContainer (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        type CXIdxClientASTFile (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<Struct>]
+        type CXIdxLoc =
+            val mutable ptr_data0 : nativeint (* nativeptr<void> *)
+            val mutable ptr_data1 : nativeint (* nativeptr<void> *)
+            val mutable int_data : uint32
+
+        [<Struct>]
+        type CXIdxIncludedFileInfo =
+            val mutable hashLoc : CXIdxLoc
+            val mutable filename : nativeint
+            val mutable file : nativeint (* CXFile *)
+            val mutable isImport : int
+            val mutable isAngled : int
+            val mutable isModuleImport : int
+
+        [<Struct>]
+        type CXIdxImportedASTFileInfo =
+            val mutable file : nativeint (* CXFile *)
+            val mutable _module : nativeint (* CXModule *)
+            val mutable loc : CXIdxLoc
+            val mutable isImplicit : int
+
+        type CXIdxEntityKind =
+            | CXIdxEntity_Unexposed = 0
+            | CXIdxEntity_Typedef = 1
+            | CXIdxEntity_Function = 2
+            | CXIdxEntity_Variable = 3
+            | CXIdxEntity_Field = 4
+            | CXIdxEntity_EnumConstant = 5
+            | CXIdxEntity_ObjCClass = 6
+            | CXIdxEntity_ObjCProtocol = 7
+            | CXIdxEntity_ObjCCategory = 8
+            | CXIdxEntity_ObjCInstanceMethod = 9
+            | CXIdxEntity_ObjCClassMethod = 10
+            | CXIdxEntity_ObjCProperty = 11
+            | CXIdxEntity_ObjCIvar = 12
+            | CXIdxEntity_Enum = 13
+            | CXIdxEntity_Struct = 14
+            | CXIdxEntity_Union = 15
+            | CXIdxEntity_CXXClass = 16
+            | CXIdxEntity_CXXNamespace = 17
+            | CXIdxEntity_CXXNamespaceAlias = 18
+            | CXIdxEntity_CXXStaticVariable = 19
+            | CXIdxEntity_CXXStaticMethod = 20
+            | CXIdxEntity_CXXInstanceMethod = 21
+            | CXIdxEntity_CXXConstructor = 22
+            | CXIdxEntity_CXXDestructor = 23
+            | CXIdxEntity_CXXConversionFunction = 24
+            | CXIdxEntity_CXXTypeAlias = 25
+            | CXIdxEntity_CXXInterface = 26
+
+        type CXIdxEntityLanguage =
+            | CXIdxEntityLang_None = 0
+            | CXIdxEntityLang_C = 1
+            | CXIdxEntityLang_ObjC = 2
+            | CXIdxEntityLang_CXX = 3
+
+        type CXIdxEntityCXXTemplateKind =
+            | CXIdxEntity_NonTemplate = 0
+            | CXIdxEntity_Template = 1
+            | CXIdxEntity_TemplatePartialSpecialization = 2
+            | CXIdxEntity_TemplateSpecialization = 3
+
+        type CXIdxAttrKind =
+            | CXIdxAttr_Unexposed = 0
+            | CXIdxAttr_IBAction = 1
+            | CXIdxAttr_IBOutlet = 2
+            | CXIdxAttr_IBOutletCollection = 3
+
+        [<Struct>]
+        type CXIdxAttrInfo =
+            val mutable kind : CXIdxAttrKind (* CXIdxAttrKind *)
+            val mutable cursor : CXCursor
+            val mutable loc : CXIdxLoc
+
+        [<Struct>]
+        type CXIdxEntityInfo =
+            val mutable kind : CXIdxEntityKind (* CXIdxEntityKind *)
+            val mutable templateKind : CXIdxEntityCXXTemplateKind (* CXIdxEntityCXXTemplateKind *)
+            val mutable lang : CXIdxEntityLanguage (* CXIdxEntityLanguage *)
+            val mutable name : nativeint
+            val mutable USR : nativeint
+            val mutable cursor : CXCursor
+            val mutable attributes : CXIdxAttrInfo
+            val mutable numAttributes : uint32
+
+        [<Struct>]
+        type CXIdxContainerInfo =
+            val mutable cursor : CXCursor
+
+        [<Struct>]
+        type CXIdxIBOutletCollectionAttrInfo =
+            val mutable attrInfo : CXIdxAttrInfo
+            val mutable objcClass : CXIdxEntityInfo
+            val mutable classCursor : CXCursor
+            val mutable classLoc : CXIdxLoc
+
+        type CXIdxDeclInfoFlags =
+            | CXIdxDeclFlag_Skipped = 1
+
+        [<Struct>]
+        type CXIdxDeclInfo =
+            val mutable entityInfo : CXIdxEntityInfo
+            val mutable cursor : CXCursor
+            val mutable loc : CXIdxLoc
+            val mutable semanticContainer : CXIdxContainerInfo
+            val mutable lexicalContainer : CXIdxContainerInfo
+            val mutable isRedeclaration : int
+            val mutable isDefinition : int
+            val mutable isContainer : int
+            val mutable declAsContainer : CXIdxContainerInfo
+            val mutable isImplicit : int
+            val mutable attributes : CXIdxAttrInfo
+            val mutable numAttributes : uint32
+            val mutable flags : uint32
+
+        type CXIdxObjCContainerKind =
+            | CXIdxObjCContainer_ForwardRef = 0
+            | CXIdxObjCContainer_Interface = 1
+            | CXIdxObjCContainer_Implementation = 2
+
+        [<Struct>]
+        type CXIdxObjCContainerDeclInfo =
+            val mutable declInfo : CXIdxDeclInfo
+            val mutable kind : CXIdxObjCContainerKind (* CXIdxObjCContainerKind *)
+
+        [<Struct>]
+        type CXIdxBaseClassInfo =
+            val mutable _base : CXIdxEntityInfo
+            val mutable cursor : CXCursor
+            val mutable loc : CXIdxLoc
+
+        [<Struct>]
+        type CXIdxObjCProtocolRefInfo =
+            val mutable protocol : CXIdxEntityInfo
+            val mutable cursor : CXCursor
+            val mutable loc : CXIdxLoc
+
+        [<Struct>]
+        type CXIdxObjCProtocolRefListInfo =
+            val mutable protocols : CXIdxObjCProtocolRefInfo
+            val mutable numProtocols : uint32
+
+        [<Struct>]
+        type CXIdxObjCInterfaceDeclInfo =
+            val mutable containerInfo : CXIdxObjCContainerDeclInfo
+            val mutable superInfo : CXIdxBaseClassInfo
+            val mutable protocols : CXIdxObjCProtocolRefListInfo
+
+        [<Struct>]
+        type CXIdxObjCCategoryDeclInfo =
+            val mutable containerInfo : CXIdxObjCContainerDeclInfo
+            val mutable objcClass : CXIdxEntityInfo
+            val mutable classCursor : CXCursor
+            val mutable classLoc : CXIdxLoc
+            val mutable protocols : CXIdxObjCProtocolRefListInfo
+
+        [<Struct>]
+        type CXIdxObjCPropertyDeclInfo =
+            val mutable declInfo : CXIdxDeclInfo
+            val mutable getter : CXIdxEntityInfo
+            val mutable setter : CXIdxEntityInfo
+
+        [<Struct>]
+        type CXIdxCXXClassDeclInfo =
+            val mutable declInfo : CXIdxDeclInfo
+            val mutable bases : CXIdxBaseClassInfo
+            val mutable numBases : uint32
+
+        type CXIdxEntityRefKind =
+            | CXIdxEntityRef_Direct = 1
+            | CXIdxEntityRef_Implicit = 2
+
+        [<Struct>]
+        type CXIdxEntityRefInfo =
+            val mutable kind : CXIdxEntityRefKind (* CXIdxEntityRefKind *)
+            val mutable cursor : CXCursor
+            val mutable loc : CXIdxLoc
+            val mutable referencedEntity : CXIdxEntityInfo
+            val mutable parentEntity : CXIdxEntityInfo
+            val mutable container : CXIdxContainerInfo
+
+        type AbortQuery = delegate of nativeint (* CXClientData *) * nativeint (* nativeptr<void> *) -> int
+
+        type Diagnostic = delegate of nativeint (* CXClientData *) * nativeint (* CXDiagnosticSet *) * nativeint (* nativeptr<void> *) -> Unit
+
+        type EnteredMainFile = delegate of nativeint (* CXClientData *) * nativeint (* CXFile *) * nativeint (* nativeptr<void> *) -> nativeint (* CXIdxClientFile *)
+
+        type PpIncludedFile = delegate of nativeint (* CXClientData *) * CXIdxIncludedFileInfo -> nativeint (* CXIdxClientFile *)
+
+        type ImportedASTFile = delegate of nativeint (* CXClientData *) * CXIdxImportedASTFileInfo -> nativeint (* CXIdxClientASTFile *)
+
+        type StartedTranslationUnit = delegate of nativeint (* CXClientData *) * nativeint (* nativeptr<void> *) -> nativeint (* CXIdxClientContainer *)
+
+        type IndexDeclaration = delegate of nativeint (* CXClientData *) * CXIdxDeclInfo -> Unit
+
+        type IndexEntityReference = delegate of nativeint (* CXClientData *) * CXIdxEntityRefInfo -> Unit
+
+        [<Struct>]
+        type IndexerCallbacks =
+            val mutable abortQuery : AbortQuery (* int ( *abortQuery )( CXClientData, void* ) *)
+            val mutable diagnostic : Diagnostic (* void ( *diagnostic )( CXClientData, CXDiagnosticSet, void* ) *)
+            val mutable enteredMainFile : EnteredMainFile (* CXIdxClientFile ( *enteredMainFile )( CXClientData, CXFile, void* ) *)
+            val mutable ppIncludedFile : PpIncludedFile (* CXIdxClientFile ( *ppIncludedFile )( CXClientData, const CXIdxIncludedFileInfo* ) *)
+            val mutable importedASTFile : ImportedASTFile (* CXIdxClientASTFile ( *importedASTFile )( CXClientData, const CXIdxImportedASTFileInfo* ) *)
+            val mutable startedTranslationUnit : StartedTranslationUnit (* CXIdxClientContainer ( *startedTranslationUnit )( CXClientData, void* ) *)
+            val mutable indexDeclaration : IndexDeclaration (* void ( *indexDeclaration )( CXClientData, const CXIdxDeclInfo* ) *)
+            val mutable indexEntityReference : IndexEntityReference (* void ( *indexEntityReference )( CXClientData, const CXIdxEntityRefInfo* ) *)
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_isEntityObjCContainerKind",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int index_isEntityObjCContainerKindNative(
+            int (* CXIdxEntityKind *) arg0)
+        let index_isEntityObjCContainerKind _arg0 =
+            index_isEntityObjCContainerKindNative ((int (_arg0 : CXIdxEntityKind)))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getObjCContainerDeclInfo",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXIdxObjCContainerDeclInfo index_getObjCContainerDeclInfoNative(
+            CXIdxDeclInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getObjCContainerDeclInfo
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getObjCInterfaceDeclInfo",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXIdxObjCInterfaceDeclInfo index_getObjCInterfaceDeclInfoNative(
+            CXIdxDeclInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getObjCInterfaceDeclInfo
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getObjCCategoryDeclInfo",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXIdxObjCCategoryDeclInfo index_getObjCCategoryDeclInfoNative(
+            CXIdxDeclInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getObjCCategoryDeclInfo
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getObjCProtocolRefListInfo",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXIdxObjCProtocolRefListInfo index_getObjCProtocolRefListInfoNative(
+            CXIdxDeclInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getObjCProtocolRefListInfo
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getObjCPropertyDeclInfo",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXIdxObjCPropertyDeclInfo index_getObjCPropertyDeclInfoNative(
+            CXIdxDeclInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getObjCPropertyDeclInfo
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getIBOutletCollectionAttrInfo",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXIdxIBOutletCollectionAttrInfo index_getIBOutletCollectionAttrInfoNative(
+            CXIdxAttrInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getIBOutletCollectionAttrInfo
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getCXXClassDeclInfo",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXIdxCXXClassDeclInfo index_getCXXClassDeclInfoNative(
+            CXIdxDeclInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getCXXClassDeclInfo
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getClientContainer",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXIdxClientContainer *) index_getClientContainerNative(
+            CXIdxContainerInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getClientContainer
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_setClientContainer",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void index_setClientContainerNative(
+            CXIdxContainerInfo arg0,
+            void* (* CXIdxClientContainer *) arg1)
+        // I don't know how to generate an "F# friendly" version of clang_index_setClientContainer
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_getClientEntity",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXIdxClientEntity *) index_getClientEntityNative(
+            CXIdxEntityInfo arg0)
+        // I don't know how to generate an "F# friendly" version of clang_index_getClientEntity
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_index_setClientEntity",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void index_setClientEntityNative(
+            CXIdxEntityInfo arg0,
+            void* (* CXIdxClientEntity *) arg1)
+        // I don't know how to generate an "F# friendly" version of clang_index_setClientEntity
+
+        type CXIndexAction (thePtr : nativeint) =
+            member x.Ptr = (x :> ILLVMRef).Ptr
+            interface ILLVMRef with member x.Ptr = thePtr
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_IndexAction_create",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* CXIndexAction *) indexAction_createNative(
+            void* (* CXIndex *) CIdx)
+        let indexAction_create _CIdx =
+            new CXIndexAction (indexAction_createNative ((_CIdx : CXIndex).Ptr))
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_IndexAction_dispose",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void indexAction_disposeNative(
+            void* (* CXIndexAction *) arg0)
+        let indexAction_dispose _arg0 =
+            indexAction_disposeNative ((_arg0 : CXIndexAction).Ptr)
+
+        type CXIndexOptFlags =
+            | CXIndexOpt_None = 0
+            | CXIndexOpt_SuppressRedundantRefs = 1
+            | CXIndexOpt_IndexFunctionLocalSymbols = 2
+            | CXIndexOpt_IndexImplicitTemplateInstantiations = 4
+            | CXIndexOpt_SuppressWarnings = 8
+            | CXIndexOpt_SkipParsedBodiesInSession = 16
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_indexSourceFile",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int indexSourceFileNative(
+            void* (* CXIndexAction *) arg0,
+            void* (* CXClientData *) client_data,
+            IndexerCallbacks index_callbacks,
+            uint32 index_callbacks_size,
+            uint32 index_options,
+            string source_filename,
+            void* command_line_args,
+            int num_command_line_args,
+            CXUnsavedFile* unsaved_files,
+            uint32 num_unsaved_files,
+            void* (* CXTranslationUnit* *) out_TU,
+            uint32 TU_options)
+        // I don't know how to generate an "F# friendly" version of clang_indexSourceFile
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_indexTranslationUnit",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern int indexTranslationUnitNative(
+            void* (* CXIndexAction *) arg0,
+            void* (* CXClientData *) client_data,
+            IndexerCallbacks index_callbacks,
+            uint32 index_callbacks_size,
+            uint32 index_options,
+            void* (* CXTranslationUnit *) arg5)
+        // I don't know how to generate an "F# friendly" version of clang_indexTranslationUnit
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_indexLoc_getFileLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void indexLoc_getFileLocationNative(
+            CXIdxLoc loc,
+            void* (* CXIdxClientFile* *) indexFile,
+            void* (* CXFile* *) file,
+            uint32* line,
+            uint32* column,
+            uint32* offset)
+        // I don't know how to generate an "F# friendly" version of clang_indexLoc_getFileLocation
+
+        [<DllImport(
+            clangAssemblyName,
+            EntryPoint="clang_indexLoc_getCXSourceLocation",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern CXSourceLocation indexLoc_getCXSourceLocationNative(
+            CXIdxLoc loc)
+        let indexLoc_getCXSourceLocation _loc =
+            indexLoc_getCXSourceLocationNative ((_loc : CXIdxLoc))
 

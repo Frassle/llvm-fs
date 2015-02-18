@@ -8,7 +8,9 @@ let parse_error_rich =
         let fstResultRange = fst errorContext.ParseState.ResultRange
         match fstResultRange :> obj with
         | null -> eprintfn "Parse error near start of file"
-        | _    -> eprintfn "Parse error near line %i" fstResultRange.Line
+        | _    -> eprintfn "Parse error near line %i:%i" fstResultRange.Line fstResultRange.Column
+        eprintfn "%s" errorContext.Message
+        eprintfn "%A" errorContext.CurrentToken
         
         exit 1
     
@@ -30,7 +32,9 @@ let normArgs = function
 %token SEMICOL COMMA ASTER LPAREN RPAREN EOF LCURL RCURL LSQUARE RSQUARE
 %token STRUCT ENUM TYPEDEF EQ SHIFTL
 %token CONST VOID CHAR INT LONG DOUBLE FLOAT UNSIGNED SHORT UINT8 UINT64 SIZE_T STATIC INLINE
-%token UINTPTR_T
+%token UINTPTR_T TIME_T
+%token CINDEX_LINKAGE CINDEX_DEPRECATED
+%token BITOR MINUS
 
 // This is the type of the data produced by a successful reduction of the 'start'
 // symbol:
@@ -45,25 +49,40 @@ Defs:
     | EOF       { [] }
 
 Def:
-    | FuncDef                                           { $1 }
-    | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL    { Some (CEnumDef ($6, $4)) }
-    | ENUM NAME LCURL EnumVals RCURL SEMICOL            { Some (CEnumDef ($2, $4)) }
-    | TYPEDEF HackType NAME SEMICOL                     { Some (CTypeAlias ($2, $3)) }
-    | FuncPointerTypedef                                { $1 }
-    | STRUCT NAME LCURL StructMemDefs RCURL SEMICOL     { Some (CStructDef ($2, $4)) }
+    | FuncDef                                               { $1 }
+    | FuncPointerTypedef                                    { $1 }
+    | TYPEDEF HackType NAME SEMICOL                         { Some (CTypeAlias ($2, $3)) }
+    | ENUM NAME LCURL EnumVals RCURL SEMICOL                { Some (CEnumDef ($2, $4)) }
+    | TYPEDEF ENUM LCURL EnumVals RCURL NAME SEMICOL        { Some (CEnumDef ($6, $4)) }
+    | TYPEDEF ENUM NAME LCURL EnumVals RCURL NAME SEMICOL   { Some (CEnumDef ($7, $5)) }
+    | STRUCT NAME LCURL StructMemDefs RCURL SEMICOL         { Some (CStructDef ($2, $4)) }
+    | TYPEDEF STRUCT LCURL StructMemDefs RCURL NAME SEMICOL { Some (CStructDef ($6, $4)) }
+    | TYPEDEF STRUCT NAME LCURL StructMemDefs RCURL NAME SEMICOL { Some (CStructDef ($7, $5)) }
 
 StructMemDefs:
     | StructMemDef StructMemDefs { $1 :: $2 }
     |                            { [] }
 
 StructMemDef:
-    | HackType NAME SEMICOL { ($2, $1) }
+    | HackType NAME Array SEMICOL { ($2, {$1 with arraySize = $3}) }
+    | HackType LPAREN ASTER NAME RPAREN LPAREN Params RPAREN SEMICOL
+        { ($4, {baseType = FunctionType ($4, $1, $7); isConst = false; pointerDepth = 0; arraySize = None}) }
 
 FuncDef:
     | STATIC INLINE HackType NAME LPAREN Params RPAREN LCURL RCURL
         { None }
     | HackType NAME LPAREN Params RPAREN SEMICOL
         { Some (CFuncDef ($1, $2, normArgs $4)) }
+    | ClangAttributes HackType NAME LPAREN Params RPAREN SEMICOL
+        { Some (CFuncDef ($2, $3, normArgs $5)) }
+
+ClangAttributes:
+    | ClangAttribute ClangAttributes { }
+    |                                { }
+
+ClangAttribute:
+    | CINDEX_DEPRECATED { }
+    | CINDEX_LINKAGE    { }
 
 FuncPointerTypedef:
     | TYPEDEF FullType LPAREN ASTER NAME RPAREN LPAREN Params RPAREN SEMICOL
@@ -75,7 +94,14 @@ EnumVals:
 
 EnumVal:
     | NAME { ($1, None) }
-    | NAME EQ IntVal { ($1, Some $3) }
+    | NAME EQ IntExpr { ($1, Some $3) }
+
+IntExpr:
+    | NAME { CExprName $1 }
+    | IntVal { CExprInt $1 }
+    | IntExpr BITOR IntExpr { CExprBitOr ($1, $3) }
+    | IntExpr MINUS IntExpr { CExprMinus ($1, $3) }
+    | LPAREN IntExpr RPAREN { $2 }
 
 IntVal:
     | INTCONST SHIFTL INTCONST { $1 <<< $3 }
@@ -88,12 +114,16 @@ HackType:
         { {$1 with pointerDepth = ($1).pointerDepth + 1} }
 
 FullType:
-    | CONST BaseType Pointers   { {baseType = $2; isConst = true; pointerDepth = $3} }
-    | BaseType Pointers         { {baseType = $1; isConst = false; pointerDepth = $2} }
+    | CONST BaseType Pointers { {baseType = $2; isConst = true; pointerDepth = $3; arraySize = None} }
+    | BaseType Pointers       { {baseType = $1; isConst = false; pointerDepth = $2; arraySize = None} }
 
 Pointers:
     | ASTER Pointers { $2 + 1 }
     |                { 0 }
+
+Array:
+    | LSQUARE IntVal RSQUARE { Some $2 }
+    |                        { None }
 
 BaseType:
     | NAME                  { GeneralType $1 }
@@ -104,20 +134,27 @@ BaseType:
     | CHAR                  { CharType }
     | UNSIGNED LONG LONG    { UnsignedLongLongType }
     | LONG LONG             { LongLongType }
+    | LONG                  { LongLongType }
+    | UNSIGNED LONG         { UnsignedLongLongType }
     | UNSIGNED              { UnsignedIntType }
     | UINT8                 { UnsignedByteType }
     | UINT64                { UnsignedLongLongType }
     | SIZE_T                { SizeTType }
     | UINTPTR_T             { UIntPtrTType }
+    | TIME_T                { TimeTType }
     | DOUBLE                { DoubleType }
 
 Params:
     | Param COMMA Params    { $1 :: $3 }
     | Param                 { [$1] }
+    | VOID                  { [] }
     |                       { [] }
 
 Param:
-    | ParamNoArray { $1 }
+    | HackType LPAREN ASTER NAME RPAREN LPAREN Params RPAREN
+        { ({baseType = FunctionType ($4, $1, $7); isConst = false; pointerDepth = 0; arraySize = None}, Some $4) }
+    | ParamNoArray Array
+        { match $1 with (ty, name) -> ({ty with arraySize = $2}, name) }
     | ParamNoArray LSQUARE RSQUARE
         { match $1 with (ty, name) -> ({ty with pointerDepth = ty.pointerDepth + 1}, name) }
 
