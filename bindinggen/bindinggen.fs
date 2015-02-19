@@ -87,6 +87,7 @@ let toFSharpSource
     // using a black-list to prevent auto-generation of certain function bindings
     let blacklistedFuncs =
         Set.ofList [
+            "LLVMCreateMessage"
             "LLVMDisposeMessage"
             "LLVMCreateSimpleMCJITMemoryManager"
             "LLVMDisposeMCJITMemoryManager"

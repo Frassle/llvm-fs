@@ -637,15 +637,7 @@ namespace LLVM.Generated
         let shutdown () =
             shutdownNative ()
 
-        [<DllImport(
-            llvmAssemblyName,
-            EntryPoint="LLVMCreateMessage",
-            CallingConvention=CallingConvention.Cdecl,
-            CharSet=CharSet.Ansi)>]
-        extern void* createMessageNative(
-            string Message)
-        let createMessage _Message =
-            Marshal.PtrToStringAuto (createMessageNative (_Message))
+        // LLVMCreateMessage is blacklisted by the binding generator
 
         // LLVMDisposeMessage is blacklisted by the binding generator
 
