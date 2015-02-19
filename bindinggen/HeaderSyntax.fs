@@ -44,6 +44,6 @@ type CDef =
     | CFuncPtrDef of CFullType * string * (CFullType * string option) list
     | CFuncDef of CFullType * string * (CFullType * string option) list
     | CEnumDef of string * (string * int option) list
-    | CStructDef of string
+    | CStructDef of string * (string * CFullType) list
     | CTypeAlias of CFullType * string
 

@@ -50,7 +50,7 @@ let getFuncTypeDefs (defs : CDef list) =
 
     go Set.empty defs
 
-let getStructDefs (defs : CDef list) =
+let getAliasDefs (defs : CDef list) =
     let rec go (structs : Set<string>)= function
     | [] -> structs
     | defHead :: defs ->
@@ -100,7 +100,7 @@ let toFSharpSource
     let allDefs = defs @ List.concat depDefs
     
     let funcTypes = getFuncTypeDefs allDefs
-    let structRefs = getStructDefs allDefs
+    let aliasTypes = getAliasDefs allDefs
     let enums = getEnumDefs allDefs
 
     let typeToStr (isNative : bool) (isParam : bool) (cType : CFullType) =
@@ -122,7 +122,7 @@ let toFSharpSource
                 defPtrAdj (sprintf "int (* %s *)" (cType.ToString ()))
             elif funcTypes.Contains typeName then
                 sprintf "%s (* function pointer *)" (toFSharpDataName typeName)
-            elif typeName.EndsWith "Ref" then
+            elif aliasTypes.Contains typeName then
                 if isNative then
                     sprintf "void* (* %s *)" (cType.ToString ()) // TODO
                 else
@@ -132,9 +132,9 @@ let toFSharpSource
         | StructType typeName ->
             if cType.pointerDepth = 1 then
                 if isNative then
-                    sprintf "void* (* struct %s* *)" (cType.ToString ())
+                    sprintf "%s*" (toFSharpDataName typeName)
                 else
-                    sprintf "nativeint (* struct %s* *)" (cType.ToString ())
+                    sprintf "nativeptr<%s>" (toFSharpDataName typeName)
             else
                 failwith "can't deal with naked struct type"
         | IntType -> defPtrAdj "int"
@@ -230,7 +230,7 @@ let toFSharpSource
                                         sprintf "(int (%s : %s))" name (toFSharpDataName typeName)
                                     elif funcTypes.Contains typeName then
                                         sprintf "%s" name
-                                    elif typeName.EndsWith "Ref" then
+                                    elif aliasTypes.Contains typeName then
                                         sprintf "(%s : %s).Ptr" name (toFSharpDataName typeName)
                                     else
                                         failwith (sprintf "don't know how to deal with: %s" typeName)
@@ -263,7 +263,7 @@ let toFSharpSource
                                     ifprintf 3 out "enum<%s> (" (toFSharpDataName typeName)
                                     nativeFunCall ()
                                     fprintf out ")"
-                                elif typeName.EndsWith "Ref" then
+                                elif aliasTypes.Contains typeName then
                                     ifprintf 3 out "new %s (" (toFSharpDataName typeName)
                                     nativeFunCall ()
                                     fprintf out ")"
@@ -307,6 +307,16 @@ let toFSharpSource
                     nextEnumVal <- nextEnumVal + 1
                 out.WriteLine ()
                 
+                go defTail
+
+            | CStructDef (structName, structFields) ->
+                ifprintfn 2 out "[<Struct>]"
+                ifprintfn 2 out "type %s =" (toFSharpDataName structName)
+                for (fieldName, fieldType) in structFields do
+                    ifprintfn 3 out "val mutable %s : %s" (fieldName) (typeToStr false false fieldType)
+
+                out.WriteLine ()
+
                 go defTail
 
             | CTypeAlias ({CFullType.baseType = StructType _; CFullType.pointerDepth = 1}, name) ->
@@ -376,10 +386,10 @@ let main (args : string array) =
             ("Object",              ["Support"])
             ("Core",                ["Support"])
             ("Initialization",      ["Core"])
-            ("BitReader",           ["Core"])
+            ("BitReader",           ["Support"; "Core"])
             ("BitWriter",           ["Support"; "Core"])
             ("Target",              ["Core"])
-            ("TargetMachine",       ["Core"; "Target"])
+            ("TargetMachine",       ["Support"; "Core"; "Target"])
             ("ExecutionEngine",     ["Core"; "Target"; "TargetMachine"])
             ("Analysis",            ["Core"])
             ("Transforms.Scalar",   ["Core"])

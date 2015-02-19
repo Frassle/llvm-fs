@@ -5618,6 +5618,7 @@ namespace LLVM.Generated
 
     open LLVM.FFIUtil
     open System.Runtime.InteropServices
+    open LLVM.Generated.Support
     open LLVM.Generated.Core
 
     module BitReader =
@@ -6000,6 +6001,7 @@ namespace LLVM.Generated
 
     open LLVM.FFIUtil
     open System.Runtime.InteropServices
+    open LLVM.Generated.Support
     open LLVM.Generated.Core
     open LLVM.Generated.Target
 
@@ -6301,6 +6303,14 @@ namespace LLVM.Generated
             member x.Ptr = (x :> ILLVMRef).Ptr
             interface ILLVMRef with member x.Ptr = thePtr
 
+        [<Struct>]
+        type MCJITCompilerOptions =
+            val mutable OptLevel : uint32
+            val mutable CodeModel : int (* LLVMCodeModel *)
+            val mutable NoFramePointerElim : bool
+            val mutable EnableFastISel : bool
+            val mutable MCJMM : nativeint (* LLVMMCJITMemoryManagerRef *)
+
         [<DllImport(
             llvmAssemblyName,
             EntryPoint="LLVMCreateGenericValueOfInt",
@@ -6424,7 +6434,7 @@ namespace LLVM.Generated
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
         extern void initializeMCJITCompilerOptionsNative(
-            void* (* struct struct LLVMMCJITCompilerOptions** *) Options,
+            MCJITCompilerOptions* Options,
             nativeint (* size_t *) SizeOfOptions)
         // I don't know how to generate an "F# friendly" version of LLVMInitializeMCJITCompilerOptions
 
@@ -6436,7 +6446,7 @@ namespace LLVM.Generated
         extern bool createMCJITCompilerForModuleNative(
             void* (* LLVMExecutionEngineRef* *) OutJIT,
             void* (* LLVMModuleRef *) M,
-            void* (* struct struct LLVMMCJITCompilerOptions** *) Options,
+            MCJITCompilerOptions* Options,
             nativeint (* size_t *) SizeOfOptions,
             void* OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateMCJITCompilerForModule

@@ -50,14 +50,14 @@ Def:
     | ENUM NAME LCURL EnumVals RCURL SEMICOL            { Some (CEnumDef ($2, $4)) }
     | TYPEDEF HackType NAME SEMICOL                     { Some (CTypeAlias ($2, $3)) }
     | FuncPointerTypedef                                { $1 }
-    | STRUCT NAME LCURL StructMemDefs RCURL SEMICOL     { Some (CStructDef $2) }
+    | STRUCT NAME LCURL StructMemDefs RCURL SEMICOL     { Some (CStructDef ($2, $4)) }
 
 StructMemDefs:
-    | StructMemDef StructMemDefs { }
-    |                            { }
+    | StructMemDef StructMemDefs { $1 :: $2 }
+    |                            { [] }
 
 StructMemDef:
-    | HackType NAME SEMICOL { }
+    | HackType NAME SEMICOL { ($2, $1) }
 
 FuncDef:
     | STATIC INLINE HackType NAME LPAREN Params RPAREN LCURL RCURL
