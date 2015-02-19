@@ -66,6 +66,7 @@ rule tokenize = parse
 | "uint8_t"         { UINT8 }
 | "uint64_t"        { UINT64 }
 | "size_t"          { SIZE_T }
+| "uintptr_t"       { UINTPTR_T }
 
 | varHead varTail*  { NAME (lexeme lexbuf) }
 

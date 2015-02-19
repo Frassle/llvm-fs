@@ -153,6 +153,7 @@ let toFSharpSource
                     | LongLongType -> defPtrAdj "int64"
                     | UnsignedByteType -> defPtrAdj "uint8"
                     | SizeTType -> defPtrAdj "nativeint (* size_t *)"
+                    | UIntPtrTType -> defPtrAdj "unativeint (* uintptr_t *)"
                     | DoubleType -> defPtrAdj "double"
                     | FunctionType -> failwith "can't deal with function types"
 
@@ -211,7 +212,7 @@ let toFSharpSource
                             match t.baseType with
                             | GeneralType _ | StructType _ | IntType | VoidType
                             | UnsignedIntType | UnsignedLongLongType | LongLongType
-                            | UnsignedByteType | DoubleType | SizeTType ->
+                            | UnsignedByteType | DoubleType | SizeTType | UIntPtrTType ->
                                 t.pointerDepth = 0
                             | CharType ->
                                 t.pointerDepth <= 1

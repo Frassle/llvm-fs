@@ -11,6 +11,7 @@ type CBaseType =
     | LongLongType
     | UnsignedByteType
     | SizeTType
+    | UIntPtrTType
     | DoubleType
     | FunctionType
     override self.ToString() =
@@ -25,6 +26,7 @@ type CBaseType =
         | LongLongType -> "long long"
         | UnsignedByteType -> "uint8_t"
         | SizeTType -> "size_t"
+        | UIntPtrTType -> "uintptr_t"
         | DoubleType -> "double"
         | FunctionType -> "function"
 
