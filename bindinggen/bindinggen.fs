@@ -43,10 +43,8 @@ let getFuncTypeDefs (defs : CDef list) =
     | [] -> funcs
     | defHead :: defs ->
         match defHead with
-        | CTypeAlias ({CFullType.baseType = FunctionType _; CFullType.pointerDepth = 1}, name) ->
+        | CFuncPtrDef (_, name, _) ->
             go (funcs.Add name) defs
-        | CTypeAlias ({CFullType.baseType = FunctionType _}, name) ->
-            failwith "only know how to deal with single-pointer function types"
         | _ ->
             go funcs defs
 
@@ -89,8 +87,6 @@ let toFSharpSource
         Set.ofList [
             "LLVMCreateMessage"
             "LLVMDisposeMessage"
-            "LLVMCreateSimpleMCJITMemoryManager"
-            "LLVMDisposeMCJITMemoryManager"
         ]
 
     let nsLen = moduleName.LastIndexOf '.'
@@ -106,6 +102,69 @@ let toFSharpSource
     let funcTypes = getFuncTypeDefs allDefs
     let structRefs = getStructDefs allDefs
     let enums = getEnumDefs allDefs
+
+    let typeToStr (isNative : bool) (isParam : bool) (cType : CFullType) =
+        let rec pointerAdjust ptrDepth typeStr =
+            match ptrDepth with
+            | 0 -> typeStr
+            | i ->
+                let subType = pointerAdjust (ptrDepth - 1) typeStr
+                if isNative then
+                    subType + "*"
+                else
+                    "nativeptr<" + subType + ">"
+        let defPtrAdj = pointerAdjust cType.pointerDepth
+
+        match cType.baseType with
+        | GeneralType "LLVMBool" -> defPtrAdj "bool"
+        | GeneralType typeName ->
+            if enums.Contains typeName then
+                defPtrAdj (sprintf "int (* %s *)" (cType.ToString ()))
+            elif funcTypes.Contains typeName then
+                sprintf "%s (* function pointer *)" (toFSharpDataName typeName)
+            elif typeName.EndsWith "Ref" then
+                if isNative then
+                    sprintf "void* (* %s *)" (cType.ToString ()) // TODO
+                else
+                    sprintf "nativeint (* %s *)" (cType.ToString ())
+            else
+                failwith (sprintf "don't know how to deal with: %s" typeName)
+        | StructType typeName ->
+            if cType.pointerDepth = 1 then
+                if isNative then
+                    sprintf "void* (* struct %s* *)" (cType.ToString ())
+                else
+                    sprintf "nativeint (* struct %s* *)" (cType.ToString ())
+            else
+                failwith "can't deal with naked struct type"
+        | IntType -> defPtrAdj "int"
+        | VoidType ->
+            if isNative then
+                defPtrAdj "void"
+            elif not isParam && cType.pointerDepth = 0 then
+                "Unit" (* not a parameter, so a return value and pointer depth = 0 *)
+            else
+                sprintf "nativeint (* %s *)" (defPtrAdj "void")
+        | CharType ->
+            if cType.pointerDepth = 0 then
+                "char"
+            elif cType.pointerDepth = 1 then
+                if isParam then
+                    "string"
+                else
+                    if isNative then "void*" else "nativeint"
+            elif cType.pointerDepth = 2 then
+                if isNative then "void*" else "nativeint"
+            else
+                failwith (sprintf "don't know how to deal with %i pointer depth" cType.pointerDepth)
+        | UnsignedIntType -> defPtrAdj "uint32"
+        | UnsignedLongLongType -> defPtrAdj "uint64"
+        | LongLongType -> defPtrAdj "int64"
+        | UnsignedByteType -> defPtrAdj "uint8"
+        | SizeTType -> defPtrAdj "nativeint (* size_t *)"
+        | UIntPtrTType -> defPtrAdj "unativeint (* uintptr_t *)"
+        | DoubleType -> defPtrAdj "double"
+
     let rec go (defs : CDef list) =
         match defs with
         | [] -> ()
@@ -113,79 +172,9 @@ let toFSharpSource
             match def with
             | CFuncDef (retType, fName, fArgs) ->
                 nativeFuncCount := !nativeFuncCount + 1
-                let typeToStr (isParam : bool) (cType : CFullType) =
-                    let pointerAdjust ptrDepth typeStr =
-                        match ptrDepth with
-                        | 0 -> typeStr
-                        | 1 -> typeStr + "*"
-                        | _ -> failwith (sprintf "don't know how to deal with %i pointer depth" ptrDepth)
-                    let defPtrAdj = pointerAdjust cType.pointerDepth
-                    
-                    match cType.baseType with
-                    | GeneralType "LLVMBool" -> defPtrAdj "bool"
-                    | GeneralType typeName ->
-                        if enums.Contains typeName then
-                            defPtrAdj (sprintf "int (* %s *)" (cType.ToString ()))
-                        elif typeName.EndsWith "Ref" then
-                            sprintf "void* (* %s *)" (cType.ToString ()) // TODO
-                        else
-                            failwith (sprintf "don't know how to deal with: %s" typeName)
-                    | StructType typeName ->
-                        if cType.pointerDepth = 1 then
-                            sprintf "void* (* struct %s* *)" (cType.ToString ())
-                        else
-                            failwith "can't deal with naked struct type"
-                    | IntType -> defPtrAdj "int"
-                    | VoidType -> defPtrAdj "void"
-                    | CharType ->
-                        if cType.pointerDepth = 0 then
-                            "char"
-                        elif cType.pointerDepth = 1 then
-                            if isParam then
-                                "string"
-                            else
-                                "void*"
-                        elif cType.pointerDepth = 2 then
-                            "void*"
-                        else
-                            failwith (sprintf "don't know how to deal with %i pointer depth" cType.pointerDepth)
-                    | UnsignedIntType -> defPtrAdj "uint32"
-                    | UnsignedLongLongType -> defPtrAdj "uint64"
-                    | LongLongType -> defPtrAdj "int64"
-                    | UnsignedByteType -> defPtrAdj "uint8"
-                    | SizeTType -> defPtrAdj "nativeint (* size_t *)"
-                    | UIntPtrTType -> defPtrAdj "unativeint (* uintptr_t *)"
-                    | DoubleType -> defPtrAdj "double"
-                    | FunctionType -> failwith "can't deal with function types"
-
-                // if there are any function pointers passed, we can't generate a function
-                let isFuncPtr cType =
-                    match cType.baseType with
-                    | GeneralType typeName -> funcTypes.Contains typeName
-                    | FunctionType -> true
-                    | _ -> false
-                let anyFuncPtrs () =
-                    if isFuncPtr retType then
-                        true
-                    else
-                        let rec go = function
-                            | (x, _) :: xt ->
-                                if isFuncPtr x then
-                                    true
-                                else
-                                    go xt
-                            | [] ->
-                                false
-                        go fArgs
 
                 if blacklistedFuncs.Contains fName then
                     ifprintfn 2 out "// %s is blacklisted by the binding generator" fName
-                elif anyFuncPtrs () then
-                    ifprintfn
-                        2
-                        out
-                        "// %s cannot be generated because it uses a function pointer parameter or return value"
-                        fName
                 else
                     // the native function def
                     ifprintfn 2 out "[<DllImport("
@@ -193,7 +182,7 @@ let toFSharpSource
                     ifprintfn 3 out "EntryPoint=\"%s\"," fName
                     ifprintfn 3 out "CallingConvention=CallingConvention.Cdecl,"
                     ifprintfn 3 out "CharSet=CharSet.Ansi)>]"
-                    ifprintf 2 out "extern %s %sNative(" (typeToStr false retType) (toFSharpFunName fName)
+                    ifprintf 2 out "extern %s %sNative(" (typeToStr true false retType) (toFSharpFunName fName)
                     let fArgs =
                         Array.ofList fArgs
                         |> Array.mapi (fun i a -> (fst a, match snd a with Some x -> x | None -> sprintf "arg%i" i))
@@ -201,9 +190,9 @@ let toFSharpSource
                         out.WriteLine ()
                         for i = 0 to fArgs.Length - 2 do
                             let cType, name = fArgs.[i]
-                            ifprintfn 3 out "%s %s," (typeToStr true cType) name
+                            ifprintfn 3 out "%s %s," (typeToStr true true cType) name
                         let cType, name = fArgs.[fArgs.Length - 1]
-                        ifprintfn 3 out "%s %s)" (typeToStr true cType) name
+                        ifprintfn 3 out "%s %s)" (typeToStr true true cType) name
                     else
                         out.WriteLine ')'
 
@@ -217,8 +206,6 @@ let toFSharpSource
                                 t.pointerDepth = 0
                             | CharType ->
                                 t.pointerDepth <= 1
-                            | FunctionType ->
-                                false
                         let rec go = function
                             | x :: xt -> isTypeFriendly x && go xt
                             | [] -> true
@@ -241,6 +228,8 @@ let toFSharpSource
                                 | GeneralType typeName ->
                                     if enums.Contains typeName then
                                         sprintf "(int (%s : %s))" name (toFSharpDataName typeName)
+                                    elif funcTypes.Contains typeName then
+                                        sprintf "%s" name
                                     elif typeName.EndsWith "Ref" then
                                         sprintf "(%s : %s).Ptr" name (toFSharpDataName typeName)
                                     else
@@ -293,7 +282,19 @@ let toFSharpSource
                 out.WriteLine ()
                 
                 go defTail
-            
+
+            | CFuncPtrDef (retTy, name, args) ->
+                let dTy = String.concat "" [
+                            (sprintf "type %s = delegate of " (toFSharpDataName name))
+                            (String.concat " * " (args |> Seq.map (fun (arg, _) -> typeToStr false true arg)))
+                            (sprintf " -> %s" (typeToStr false false retTy))]
+
+                ifprintfn 2 out "%s" dTy
+
+                out.WriteLine()
+
+                go defTail
+
             | CEnumDef (enumName, enumVals) ->
                 ifprintfn 2 out "type %s =" (toFSharpDataName enumName)
                 let mutable nextEnumVal = 0

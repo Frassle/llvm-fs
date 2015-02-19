@@ -13,7 +13,6 @@ type CBaseType =
     | SizeTType
     | UIntPtrTType
     | DoubleType
-    | FunctionType
     override self.ToString() =
         match self with
         | GeneralType s -> s
@@ -28,7 +27,6 @@ type CBaseType =
         | SizeTType -> "size_t"
         | UIntPtrTType -> "uintptr_t"
         | DoubleType -> "double"
-        | FunctionType -> "function"
 
 type CFullType = {
     baseType : CBaseType
@@ -43,6 +41,7 @@ type CFullType = {
         str
 
 type CDef =
+    | CFuncPtrDef of CFullType * string * (CFullType * string option) list
     | CFuncDef of CFullType * string * (CFullType * string option) list
     | CEnumDef of string * (string * int option) list
     | CStructDef of string

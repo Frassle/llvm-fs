@@ -641,7 +641,17 @@ namespace LLVM.Generated
 
         // LLVMDisposeMessage is blacklisted by the binding generator
 
-        // LLVMInstallFatalErrorHandler cannot be generated because it uses a function pointer parameter or return value
+        type FatalErrorHandler = delegate of string -> Unit
+
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMInstallFatalErrorHandler",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void installFatalErrorHandlerNative(
+            FatalErrorHandler (* function pointer *) Handler)
+        let installFatalErrorHandler _Handler =
+            installFatalErrorHandlerNative (_Handler)
 
         [<DllImport(
             llvmAssemblyName,
@@ -661,6 +671,10 @@ namespace LLVM.Generated
         let enablePrettyStackTrace () =
             enablePrettyStackTraceNative ()
 
+        type DiagnosticHandler = delegate of nativeint (* LLVMDiagnosticInfoRef *) * nativeint (* nativeptr<void> *) -> Unit
+
+        type YieldCallback = delegate of nativeint (* LLVMContextRef *) * nativeint (* nativeptr<void> *) -> Unit
+
         [<DllImport(
             llvmAssemblyName,
             EntryPoint="LLVMContextCreate",
@@ -679,9 +693,27 @@ namespace LLVM.Generated
         let getGlobalContext () =
             new ContextRef (getGlobalContextNative ())
 
-        // LLVMContextSetDiagnosticHandler cannot be generated because it uses a function pointer parameter or return value
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMContextSetDiagnosticHandler",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void contextSetDiagnosticHandlerNative(
+            void* (* LLVMContextRef *) C,
+            DiagnosticHandler (* function pointer *) Handler,
+            void* DiagnosticContext)
+        // I don't know how to generate an "F# friendly" version of LLVMContextSetDiagnosticHandler
 
-        // LLVMContextSetYieldCallback cannot be generated because it uses a function pointer parameter or return value
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMContextSetYieldCallback",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void contextSetYieldCallbackNative(
+            void* (* LLVMContextRef *) C,
+            YieldCallback (* function pointer *) Callback,
+            void* OpaqueHandle)
+        // I don't know how to generate an "F# friendly" version of LLVMContextSetYieldCallback
 
         [<DllImport(
             llvmAssemblyName,
@@ -6617,9 +6649,38 @@ namespace LLVM.Generated
             void* (* LLVMValueRef *) Global)
         // I don't know how to generate an "F# friendly" version of LLVMGetPointerToGlobal
 
-        // LLVMCreateSimpleMCJITMemoryManager is blacklisted by the binding generator
 
-        // LLVMDisposeMCJITMemoryManager is blacklisted by the binding generator
+
+        type MemoryManagerAllocateCodeSectionCallback = delegate of nativeint (* nativeptr<void> *) * unativeint (* uintptr_t *) * uint32 * uint32 * string -> nativeptr<uint8>
+
+        type MemoryManagerAllocateDataSectionCallback = delegate of nativeint (* nativeptr<void> *) * unativeint (* uintptr_t *) * uint32 * uint32 * string * bool -> nativeptr<uint8>
+
+        type MemoryManagerFinalizeMemoryCallback = delegate of nativeint (* nativeptr<void> *) * nativeint -> bool
+
+        type MemoryManagerDestroyCallback = delegate of nativeint (* nativeptr<void> *) -> Unit
+
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMCreateSimpleMCJITMemoryManager",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void* (* LLVMMCJITMemoryManagerRef *) createSimpleMCJITMemoryManagerNative(
+            void* Opaque,
+            MemoryManagerAllocateCodeSectionCallback (* function pointer *) AllocateCodeSection,
+            MemoryManagerAllocateDataSectionCallback (* function pointer *) AllocateDataSection,
+            MemoryManagerFinalizeMemoryCallback (* function pointer *) FinalizeMemory,
+            MemoryManagerDestroyCallback (* function pointer *) Destroy)
+        // I don't know how to generate an "F# friendly" version of LLVMCreateSimpleMCJITMemoryManager
+
+        [<DllImport(
+            llvmAssemblyName,
+            EntryPoint="LLVMDisposeMCJITMemoryManager",
+            CallingConvention=CallingConvention.Cdecl,
+            CharSet=CharSet.Ansi)>]
+        extern void disposeMCJITMemoryManagerNative(
+            void* (* LLVMMCJITMemoryManagerRef *) MM)
+        let disposeMCJITMemoryManager _MM =
+            disposeMCJITMemoryManagerNative ((_MM : MCJITMemoryManagerRef).Ptr)
 
 // This file should not be edited. It is automatically generated from a C header file
 namespace LLVM.Generated

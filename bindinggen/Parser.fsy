@@ -67,7 +67,7 @@ FuncDef:
 
 FuncPointerTypedef:
     | TYPEDEF FullType LPAREN ASTER NAME RPAREN LPAREN Params RPAREN SEMICOL
-            { Some (CTypeAlias ({baseType = FunctionType; isConst = true; pointerDepth = 1}, $5)) }
+            { Some (CFuncPtrDef ($2, $5, $8)) }
 
 EnumVals:
     | EnumVal COMMA EnumVals { $1 :: $3 }
