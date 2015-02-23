@@ -6308,7 +6308,7 @@ namespace LLVM.Generated
         [<Struct>]
         type MCJITCompilerOptions =
             val mutable OptLevel : uint32
-            val mutable CodeModel : int (* LLVMCodeModel *)
+            val mutable CodeModel : CodeModel (* LLVMCodeModel *)
             val mutable NoFramePointerElim : bool
             val mutable EnableFastISel : bool
             val mutable MCJMM : nativeint (* LLVMMCJITMemoryManagerRef *)

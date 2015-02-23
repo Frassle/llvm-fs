@@ -119,7 +119,10 @@ let toFSharpSource
         | GeneralType "LLVMBool" -> defPtrAdj "bool"
         | GeneralType typeName ->
             if enums.Contains typeName then
-                defPtrAdj (sprintf "int (* %s *)" (cType.ToString ()))
+                if isNative then
+                    defPtrAdj (sprintf "int (* %s *)" (cType.ToString ()))
+                else
+                    defPtrAdj (sprintf "%s (* %s *)" (toFSharpDataName typeName) (cType.ToString ()))
             elif funcTypes.Contains typeName then
                 sprintf "%s (* function pointer *)" (toFSharpDataName typeName)
             elif aliasTypes.Contains typeName then
