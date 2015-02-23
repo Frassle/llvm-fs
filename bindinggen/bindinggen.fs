@@ -147,14 +147,14 @@ let toFSharpSource
                 sprintf "nativeint (* %s *)" (defPtrAdj "void")
         | CharType ->
             if cType.pointerDepth = 0 then
-                "char"
+                "byte"
             elif cType.pointerDepth = 1 then
                 if isParam then
                     "string"
                 else
-                    if isNative then "void*" else "nativeint"
+                    sprintf "%s (* %s *)" (if isNative then "void*" else "nativeint") (cType.ToString())
             elif cType.pointerDepth = 2 then
-                if isNative then "void*" else "nativeint"
+                sprintf "%s (* %s *)" (if isNative then "void*" else "nativeint") (cType.ToString())
             else
                 failwith (sprintf "don't know how to deal with %i pointer depth" cType.pointerDepth)
         | UnsignedIntType -> defPtrAdj "uint32"

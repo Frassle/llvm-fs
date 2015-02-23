@@ -27,7 +27,7 @@ namespace LLVM.Generated
             CharSet=CharSet.Ansi)>]
         extern void parseCommandLineOptionsNative(
             int argc,
-            void* argv,
+            void* (* const char** *) argv,
             string Overview)
         // I don't know how to generate an "F# friendly" version of LLVMParseCommandLineOptions
 
@@ -174,7 +174,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetSectionName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getSectionNameNative(
+        extern void* (* const char* *) getSectionNameNative(
             void* (* LLVMSectionIteratorRef *) SI)
         let getSectionName _SI =
             Marshal.PtrToStringAuto (getSectionNameNative ((_SI : SectionIteratorRef).Ptr))
@@ -194,7 +194,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetSectionContents",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getSectionContentsNative(
+        extern void* (* const char* *) getSectionContentsNative(
             void* (* LLVMSectionIteratorRef *) SI)
         let getSectionContents _SI =
             Marshal.PtrToStringAuto (getSectionContentsNative ((_SI : SectionIteratorRef).Ptr))
@@ -266,7 +266,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetSymbolName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getSymbolNameNative(
+        extern void* (* const char* *) getSymbolNameNative(
             void* (* LLVMSymbolIteratorRef *) SI)
         let getSymbolName _SI =
             Marshal.PtrToStringAuto (getSymbolNameNative ((_SI : SymbolIteratorRef).Ptr))
@@ -336,7 +336,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetRelocationTypeName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getRelocationTypeNameNative(
+        extern void* (* const char* *) getRelocationTypeNameNative(
             void* (* LLVMRelocationIteratorRef *) RI)
         let getRelocationTypeName _RI =
             Marshal.PtrToStringAuto (getRelocationTypeNameNative ((_RI : RelocationIteratorRef).Ptr))
@@ -346,7 +346,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetRelocationValueString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getRelocationValueStringNative(
+        extern void* (* const char* *) getRelocationValueStringNative(
             void* (* LLVMRelocationIteratorRef *) RI)
         let getRelocationValueString _RI =
             Marshal.PtrToStringAuto (getRelocationValueStringNative ((_RI : RelocationIteratorRef).Ptr))
@@ -732,7 +732,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetDiagInfoDescription",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getDiagInfoDescriptionNative(
+        extern void* (* char* *) getDiagInfoDescriptionNative(
             void* (* LLVMDiagnosticInfoRef *) DI)
         let getDiagInfoDescription _DI =
             Marshal.PtrToStringAuto (getDiagInfoDescriptionNative ((_DI : DiagnosticInfoRef).Ptr))
@@ -816,7 +816,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetDataLayout",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getDataLayoutNative(
+        extern void* (* const char* *) getDataLayoutNative(
             void* (* LLVMModuleRef *) M)
         let getDataLayout _M =
             Marshal.PtrToStringAuto (getDataLayoutNative ((_M : ModuleRef).Ptr))
@@ -837,7 +837,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetTarget",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getTargetNative(
+        extern void* (* const char* *) getTargetNative(
             void* (* LLVMModuleRef *) M)
         let getTarget _M =
             Marshal.PtrToStringAuto (getTargetNative ((_M : ModuleRef).Ptr))
@@ -871,7 +871,7 @@ namespace LLVM.Generated
         extern bool printModuleToFileNative(
             void* (* LLVMModuleRef *) M,
             string Filename,
-            void* ErrorMessage)
+            void* (* char** *) ErrorMessage)
         // I don't know how to generate an "F# friendly" version of LLVMPrintModuleToFile
 
         [<DllImport(
@@ -879,7 +879,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMPrintModuleToString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* printModuleToStringNative(
+        extern void* (* char* *) printModuleToStringNative(
             void* (* LLVMModuleRef *) M)
         let printModuleToString _M =
             Marshal.PtrToStringAuto (printModuleToStringNative ((_M : ModuleRef).Ptr))
@@ -1058,7 +1058,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMPrintTypeToString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* printTypeToStringNative(
+        extern void* (* char* *) printTypeToStringNative(
             void* (* LLVMTypeRef *) Val)
         let printTypeToString _Val =
             Marshal.PtrToStringAuto (printTypeToStringNative ((_Val : TypeRef).Ptr))
@@ -1394,7 +1394,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetStructName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getStructNameNative(
+        extern void* (* const char* *) getStructNameNative(
             void* (* LLVMTypeRef *) Ty)
         let getStructName _Ty =
             Marshal.PtrToStringAuto (getStructNameNative ((_Ty : TypeRef).Ptr))
@@ -1596,7 +1596,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetValueName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getValueNameNative(
+        extern void* (* const char* *) getValueNameNative(
             void* (* LLVMValueRef *) Val)
         let getValueName _Val =
             Marshal.PtrToStringAuto (getValueNameNative ((_Val : ValueRef).Ptr))
@@ -1627,7 +1627,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMPrintValueToString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* printValueToStringNative(
+        extern void* (* char* *) printValueToStringNative(
             void* (* LLVMValueRef *) Val)
         let printValueToString _Val =
             Marshal.PtrToStringAuto (printValueToStringNative ((_Val : ValueRef).Ptr))
@@ -1949,7 +1949,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetAsString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getAsStringNative(
+        extern void* (* const char* *) getAsStringNative(
             void* (* LLVMValueRef *) c,
             nativeint (* size_t *)* out)
         // I don't know how to generate an "F# friendly" version of LLVMGetAsString
@@ -2772,7 +2772,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetSection",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getSectionNative(
+        extern void* (* const char* *) getSectionNative(
             void* (* LLVMValueRef *) Global)
         let getSection _Global =
             Marshal.PtrToStringAuto (getSectionNative ((_Global : ValueRef).Ptr))
@@ -3122,7 +3122,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetGC",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getGCNative(
+        extern void* (* const char* *) getGCNative(
             void* (* LLVMValueRef *) Fn)
         let getGC _Fn =
             Marshal.PtrToStringAuto (getGCNative ((_Fn : ValueRef).Ptr))
@@ -3355,7 +3355,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetMDString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getMDStringNative(
+        extern void* (* const char* *) getMDStringNative(
             void* (* LLVMValueRef *) V,
             uint32* Len)
         // I don't know how to generate an "F# friendly" version of LLVMGetMDString
@@ -5301,7 +5301,7 @@ namespace LLVM.Generated
         extern bool createMemoryBufferWithContentsOfFileNative(
             string Path,
             void* (* LLVMMemoryBufferRef* *) OutMemBuf,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMCreateMemoryBufferWithContentsOfFile
 
         [<DllImport(
@@ -5311,7 +5311,7 @@ namespace LLVM.Generated
             CharSet=CharSet.Ansi)>]
         extern bool createMemoryBufferWithSTDINNative(
             void* (* LLVMMemoryBufferRef* *) OutMemBuf,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMCreateMemoryBufferWithSTDIN
 
         [<DllImport(
@@ -5344,7 +5344,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetBufferStart",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getBufferStartNative(
+        extern void* (* const char* *) getBufferStartNative(
             void* (* LLVMMemoryBufferRef *) MemBuf)
         let getBufferStart _MemBuf =
             Marshal.PtrToStringAuto (getBufferStartNative ((_MemBuf : MemoryBufferRef).Ptr))
@@ -5633,7 +5633,7 @@ namespace LLVM.Generated
         extern bool parseBitcodeNative(
             void* (* LLVMMemoryBufferRef *) MemBuf,
             void* (* LLVMModuleRef* *) OutModule,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMParseBitcode
 
         [<DllImport(
@@ -5645,7 +5645,7 @@ namespace LLVM.Generated
             void* (* LLVMContextRef *) ContextRef,
             void* (* LLVMMemoryBufferRef *) MemBuf,
             void* (* LLVMModuleRef* *) OutModule,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMParseBitcodeInContext
 
         [<DllImport(
@@ -5657,7 +5657,7 @@ namespace LLVM.Generated
             void* (* LLVMContextRef *) ContextRef,
             void* (* LLVMMemoryBufferRef *) MemBuf,
             void* (* LLVMModuleRef* *) OutM,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMGetBitcodeModuleInContext
 
         [<DllImport(
@@ -5668,7 +5668,7 @@ namespace LLVM.Generated
         extern bool getBitcodeModuleNative(
             void* (* LLVMMemoryBufferRef *) MemBuf,
             void* (* LLVMModuleRef* *) OutM,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMGetBitcodeModule
 
         [<DllImport(
@@ -5680,7 +5680,7 @@ namespace LLVM.Generated
             void* (* LLVMContextRef *) ContextRef,
             void* (* LLVMMemoryBufferRef *) MemBuf,
             void* (* LLVMModuleProviderRef* *) OutMP,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMGetBitcodeModuleProviderInContext
 
         [<DllImport(
@@ -5691,7 +5691,7 @@ namespace LLVM.Generated
         extern bool getBitcodeModuleProviderNative(
             void* (* LLVMMemoryBufferRef *) MemBuf,
             void* (* LLVMModuleProviderRef* *) OutMP,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMGetBitcodeModuleProvider
 
 // This file should not be edited. It is automatically generated from a C header file
@@ -5807,7 +5807,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMCopyStringRepOfTargetData",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* copyStringRepOfTargetDataNative(
+        extern void* (* char* *) copyStringRepOfTargetDataNative(
             void* (* LLVMTargetDataRef *) TD)
         let copyStringRepOfTargetData _TD =
             Marshal.PtrToStringAuto (copyStringRepOfTargetDataNative ((_TD : TargetDataRef).Ptr))
@@ -6078,7 +6078,7 @@ namespace LLVM.Generated
         extern bool getTargetFromTripleNative(
             string Triple,
             void* (* LLVMTargetRef* *) T,
-            void* ErrorMessage)
+            void* (* char** *) ErrorMessage)
         // I don't know how to generate an "F# friendly" version of LLVMGetTargetFromTriple
 
         [<DllImport(
@@ -6086,7 +6086,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetTargetName",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getTargetNameNative(
+        extern void* (* const char* *) getTargetNameNative(
             void* (* LLVMTargetRef *) T)
         let getTargetName _T =
             Marshal.PtrToStringAuto (getTargetNameNative ((_T : TargetRef).Ptr))
@@ -6096,7 +6096,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetTargetDescription",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getTargetDescriptionNative(
+        extern void* (* const char* *) getTargetDescriptionNative(
             void* (* LLVMTargetRef *) T)
         let getTargetDescription _T =
             Marshal.PtrToStringAuto (getTargetDescriptionNative ((_T : TargetRef).Ptr))
@@ -6172,7 +6172,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetTargetMachineTriple",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getTargetMachineTripleNative(
+        extern void* (* char* *) getTargetMachineTripleNative(
             void* (* LLVMTargetMachineRef *) T)
         let getTargetMachineTriple _T =
             Marshal.PtrToStringAuto (getTargetMachineTripleNative ((_T : TargetMachineRef).Ptr))
@@ -6182,7 +6182,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetTargetMachineCPU",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getTargetMachineCPUNative(
+        extern void* (* char* *) getTargetMachineCPUNative(
             void* (* LLVMTargetMachineRef *) T)
         let getTargetMachineCPU _T =
             Marshal.PtrToStringAuto (getTargetMachineCPUNative ((_T : TargetMachineRef).Ptr))
@@ -6192,7 +6192,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetTargetMachineFeatureString",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getTargetMachineFeatureStringNative(
+        extern void* (* char* *) getTargetMachineFeatureStringNative(
             void* (* LLVMTargetMachineRef *) T)
         let getTargetMachineFeatureString _T =
             Marshal.PtrToStringAuto (getTargetMachineFeatureStringNative ((_T : TargetMachineRef).Ptr))
@@ -6228,7 +6228,7 @@ namespace LLVM.Generated
             void* (* LLVMModuleRef *) M,
             string Filename,
             int (* LLVMCodeGenFileType *) codegen,
-            void* ErrorMessage)
+            void* (* char** *) ErrorMessage)
         // I don't know how to generate an "F# friendly" version of LLVMTargetMachineEmitToFile
 
         [<DllImport(
@@ -6240,7 +6240,7 @@ namespace LLVM.Generated
             void* (* LLVMTargetMachineRef *) T,
             void* (* LLVMModuleRef *) M,
             int (* LLVMCodeGenFileType *) codegen,
-            void* ErrorMessage,
+            void* (* char** *) ErrorMessage,
             void* (* LLVMMemoryBufferRef* *) OutMemBuf)
         // I don't know how to generate an "F# friendly" version of LLVMTargetMachineEmitToMemoryBuffer
 
@@ -6249,7 +6249,7 @@ namespace LLVM.Generated
             EntryPoint="LLVMGetDefaultTargetTriple",
             CallingConvention=CallingConvention.Cdecl,
             CharSet=CharSet.Ansi)>]
-        extern void* getDefaultTargetTripleNative()
+        extern void* (* char* *) getDefaultTargetTripleNative()
         let getDefaultTargetTriple () =
             Marshal.PtrToStringAuto (getDefaultTargetTripleNative ())
 
@@ -6406,7 +6406,7 @@ namespace LLVM.Generated
         extern bool createExecutionEngineForModuleNative(
             void* (* LLVMExecutionEngineRef* *) OutEE,
             void* (* LLVMModuleRef *) M,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateExecutionEngineForModule
 
         [<DllImport(
@@ -6417,7 +6417,7 @@ namespace LLVM.Generated
         extern bool createInterpreterForModuleNative(
             void* (* LLVMExecutionEngineRef* *) OutInterp,
             void* (* LLVMModuleRef *) M,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateInterpreterForModule
 
         [<DllImport(
@@ -6429,7 +6429,7 @@ namespace LLVM.Generated
             void* (* LLVMExecutionEngineRef* *) OutJIT,
             void* (* LLVMModuleRef *) M,
             uint32 OptLevel,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateJITCompilerForModule
 
         [<DllImport(
@@ -6452,7 +6452,7 @@ namespace LLVM.Generated
             void* (* LLVMModuleRef *) M,
             MCJITCompilerOptions* Options,
             nativeint (* size_t *) SizeOfOptions,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateMCJITCompilerForModule
 
         [<DllImport(
@@ -6463,7 +6463,7 @@ namespace LLVM.Generated
         extern bool createExecutionEngineNative(
             void* (* LLVMExecutionEngineRef* *) OutEE,
             void* (* LLVMModuleProviderRef *) MP,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateExecutionEngine
 
         [<DllImport(
@@ -6474,7 +6474,7 @@ namespace LLVM.Generated
         extern bool createInterpreterNative(
             void* (* LLVMExecutionEngineRef* *) OutInterp,
             void* (* LLVMModuleProviderRef *) MP,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateInterpreter
 
         [<DllImport(
@@ -6486,7 +6486,7 @@ namespace LLVM.Generated
             void* (* LLVMExecutionEngineRef* *) OutJIT,
             void* (* LLVMModuleProviderRef *) MP,
             uint32 OptLevel,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMCreateJITCompiler
 
         [<DllImport(
@@ -6528,8 +6528,8 @@ namespace LLVM.Generated
             void* (* LLVMExecutionEngineRef *) EE,
             void* (* LLVMValueRef *) F,
             uint32 ArgC,
-            void* ArgV,
-            void* EnvP)
+            void* (* const char** *) ArgV,
+            void* (* const char** *) EnvP)
         // I don't know how to generate an "F# friendly" version of LLVMRunFunctionAsMain
 
         [<DllImport(
@@ -6586,7 +6586,7 @@ namespace LLVM.Generated
             void* (* LLVMExecutionEngineRef *) EE,
             void* (* LLVMModuleRef *) M,
             void* (* LLVMModuleRef* *) OutMod,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMRemoveModule
 
         [<DllImport(
@@ -6598,7 +6598,7 @@ namespace LLVM.Generated
             void* (* LLVMExecutionEngineRef *) EE,
             void* (* LLVMModuleProviderRef *) MP,
             void* (* LLVMModuleRef* *) OutMod,
-            void* OutError)
+            void* (* char** *) OutError)
         // I don't know how to generate an "F# friendly" version of LLVMRemoveModuleProvider
 
         [<DllImport(
@@ -6672,7 +6672,7 @@ namespace LLVM.Generated
 
         type MemoryManagerAllocateDataSectionCallback = delegate of nativeint (* nativeptr<void> *) * unativeint (* uintptr_t *) * uint32 * uint32 * string * bool -> nativeptr<uint8>
 
-        type MemoryManagerFinalizeMemoryCallback = delegate of nativeint (* nativeptr<void> *) * nativeint -> bool
+        type MemoryManagerFinalizeMemoryCallback = delegate of nativeint (* nativeptr<void> *) * nativeint (* char** *) -> bool
 
         type MemoryManagerDestroyCallback = delegate of nativeint (* nativeptr<void> *) -> Unit
 
@@ -6722,7 +6722,7 @@ namespace LLVM.Generated
         extern bool verifyModuleNative(
             void* (* LLVMModuleRef *) M,
             int (* LLVMVerifierFailureAction *) Action,
-            void* OutMessage)
+            void* (* char** *) OutMessage)
         // I don't know how to generate an "F# friendly" version of LLVMVerifyModule
 
         [<DllImport(
