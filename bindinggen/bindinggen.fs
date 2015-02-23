@@ -200,12 +200,13 @@ let toFSharpSource
                     let isFunFriendly =
                         let isTypeFriendly t =
                             match t.baseType with
-                            | GeneralType _ | StructType _ | IntType | VoidType
+                            | GeneralType _ | StructType _ | IntType
                             | UnsignedIntType | UnsignedLongLongType | LongLongType
                             | UnsignedByteType | DoubleType | SizeTType | UIntPtrTType ->
                                 t.pointerDepth = 0
                             | CharType ->
                                 t.pointerDepth <= 1
+                            | VoidType -> true
                         let rec go = function
                             | x :: xt -> isTypeFriendly x && go xt
                             | [] -> true
@@ -236,7 +237,9 @@ let toFSharpSource
                                         failwith (sprintf "don't know how to deal with: %s" typeName)
                                 | _ -> name
                             else
-                                name
+                                match cType.baseType with
+                                | VoidType -> sprintf "(%s : nativeint)" name
+                                | _ -> name
                         let nativeFunCall () =
                             if fArgs.Length >= 1 then
                                 fprintf out "%sNative (" (toFSharpFunName fName)

@@ -702,7 +702,8 @@ namespace LLVM.Generated
             void* (* LLVMContextRef *) C,
             DiagnosticHandler (* function pointer *) Handler,
             void* DiagnosticContext)
-        // I don't know how to generate an "F# friendly" version of LLVMContextSetDiagnosticHandler
+        let contextSetDiagnosticHandler _C _Handler _DiagnosticContext =
+            contextSetDiagnosticHandlerNative ((_C : ContextRef).Ptr, _Handler, (_DiagnosticContext : nativeint))
 
         [<DllImport(
             llvmAssemblyName,
@@ -713,7 +714,8 @@ namespace LLVM.Generated
             void* (* LLVMContextRef *) C,
             YieldCallback (* function pointer *) Callback,
             void* OpaqueHandle)
-        // I don't know how to generate an "F# friendly" version of LLVMContextSetYieldCallback
+        let contextSetYieldCallback _C _Callback _OpaqueHandle =
+            contextSetYieldCallbackNative ((_C : ContextRef).Ptr, _Callback, (_OpaqueHandle : nativeint))
 
         [<DllImport(
             llvmAssemblyName,
@@ -6330,7 +6332,8 @@ namespace LLVM.Generated
             CharSet=CharSet.Ansi)>]
         extern void* (* LLVMGenericValueRef *) createGenericValueOfPointerNative(
             void* P)
-        // I don't know how to generate an "F# friendly" version of LLVMCreateGenericValueOfPointer
+        let createGenericValueOfPointer _P =
+            new GenericValueRef (createGenericValueOfPointerNative ((_P : nativeint)))
 
         [<DllImport(
             llvmAssemblyName,
@@ -6371,7 +6374,8 @@ namespace LLVM.Generated
             CharSet=CharSet.Ansi)>]
         extern void* genericValueToPointerNative(
             void* (* LLVMGenericValueRef *) GenVal)
-        // I don't know how to generate an "F# friendly" version of LLVMGenericValueToPointer
+        let genericValueToPointer _GenVal =
+            genericValueToPointerNative ((_GenVal : GenericValueRef).Ptr)
 
         [<DllImport(
             llvmAssemblyName,
@@ -6616,7 +6620,8 @@ namespace LLVM.Generated
         extern void* recompileAndRelinkFunctionNative(
             void* (* LLVMExecutionEngineRef *) EE,
             void* (* LLVMValueRef *) Fn)
-        // I don't know how to generate an "F# friendly" version of LLVMRecompileAndRelinkFunction
+        let recompileAndRelinkFunction _EE _Fn =
+            recompileAndRelinkFunctionNative ((_EE : ExecutionEngineRef).Ptr, (_Fn : ValueRef).Ptr)
 
         [<DllImport(
             llvmAssemblyName,
@@ -6647,7 +6652,8 @@ namespace LLVM.Generated
             void* (* LLVMExecutionEngineRef *) EE,
             void* (* LLVMValueRef *) Global,
             void* Addr)
-        // I don't know how to generate an "F# friendly" version of LLVMAddGlobalMapping
+        let addGlobalMapping _EE _Global _Addr =
+            addGlobalMappingNative ((_EE : ExecutionEngineRef).Ptr, (_Global : ValueRef).Ptr, (_Addr : nativeint))
 
         [<DllImport(
             llvmAssemblyName,
@@ -6657,7 +6663,8 @@ namespace LLVM.Generated
         extern void* getPointerToGlobalNative(
             void* (* LLVMExecutionEngineRef *) EE,
             void* (* LLVMValueRef *) Global)
-        // I don't know how to generate an "F# friendly" version of LLVMGetPointerToGlobal
+        let getPointerToGlobal _EE _Global =
+            getPointerToGlobalNative ((_EE : ExecutionEngineRef).Ptr, (_Global : ValueRef).Ptr)
 
 
 
@@ -6680,7 +6687,8 @@ namespace LLVM.Generated
             MemoryManagerAllocateDataSectionCallback (* function pointer *) AllocateDataSection,
             MemoryManagerFinalizeMemoryCallback (* function pointer *) FinalizeMemory,
             MemoryManagerDestroyCallback (* function pointer *) Destroy)
-        // I don't know how to generate an "F# friendly" version of LLVMCreateSimpleMCJITMemoryManager
+        let createSimpleMCJITMemoryManager _Opaque _AllocateCodeSection _AllocateDataSection _FinalizeMemory _Destroy =
+            new MCJITMemoryManagerRef (createSimpleMCJITMemoryManagerNative ((_Opaque : nativeint), _AllocateCodeSection, _AllocateDataSection, _FinalizeMemory, _Destroy))
 
         [<DllImport(
             llvmAssemblyName,
